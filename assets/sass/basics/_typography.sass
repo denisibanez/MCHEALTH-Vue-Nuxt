@@ -1,0 +1,78 @@
+// ==========================================================================
+// BASICS > TYPOGRAPHY
+// ==========================================================================
+
+@import url('https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap')
+
+@font-face
+	font-family: 'flama'
+	src: url('~assets/fonts/flama-basic-normal-webfont.woff2') format('woff2'), url('~assets/fonts/flama-basic-normal-webfont.woff') format('woff')
+	font-weight: normal
+	font-style: normal
+
+h1, h2, h3, h4, h5, h6
+	font-weight: bold
+
+p
+	margin: 0 0 20px 0
+	font-size: 1.2rem
+	font-family: 'flama', BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+
+em
+	font-style: italic
+
+strong
+	font-weight: bold
+
+hr
+	border: solid #ddd
+	border-width: 1px 0 0
+	clear: both
+	margin: 10px 0 30px
+	height: 0
+
+.font-bebasneue
+	font-family: 'Bebas Neue', BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+
+@each $color in $color-config
+	.lay-color-#{nth($color, 1)}, 
+	.lay-color-#{nth($color, 1)}:hover, 
+	.lay-color-#{nth($color, 1)}:active , 
+	.lay-color-#{nth($color, 1)}:focus , 
+	.lay-color-#{nth($color, 1)}:visited,
+	.lay-color-#{nth($color, 1)} *, 
+	.lay-color-#{nth($color, 1)} *:hover, 
+	.lay-color-#{nth($color, 1)} *:active , 
+	.lay-color-#{nth($color, 1)} *:focus , 
+	.lay-color-#{nth($color, 1)} *:visited
+		color: nth($color, 2)
+
+@each $value in $fontsize-config 
+	.font-#{nth($value, 1)}
+		font-size: nth($value, 2)
+
+@include until($fullhd)
+	@each $value in $fontsize-config 
+		.font-#{nth($value, 1)}
+			font-size: nth($value, 3)
+
+@include until($widescreen)
+	@each $value in $fontsize-config 
+		.font-#{nth($value, 1)}
+			font-size: nth($value, 4)
+
+@include until($desktop)
+	@each $value in $fontsize-config 
+		.font-#{nth($value, 1)}
+			font-size: nth($value, 5)
+
+	p
+		font-size: 1.1rem
+
+@include until($tablet)
+	@each $value in $fontsize-config 
+		.font-#{nth($value, 1)}
+			font-size: nth($value, 6)
+	p
+		font-size: 1rem
+

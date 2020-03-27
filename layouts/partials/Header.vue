@@ -1,0 +1,71 @@
+<template>
+  <div class="c-header">
+    <div class="container">
+      <div class="header-list-itens">
+        <div class="menu-box">
+          MN
+        </div>
+        <div class="brand-box">
+          <a class="header-logo" :style="{ backgroundImage: 'url(' + require('@/assets/images/logo-estadao-raiox-white.svg') + ')' }" >
+            <span></span>
+          </a>
+        </div>
+        <div class="phrase-box lay-color-blue font-bebasneue">
+          {{ msg }}
+        </div>
+        <div class="end-box">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'Header',
+    props: {
+      msg: String
+    },
+    methods: {
+      init: function () {
+
+      }
+    }, 
+    created: function() {
+        
+    }
+  }
+</script>
+
+<style lang="sass" scoped>
+  .c-header 
+    width: 100%
+  .header-logo 
+    display: inline-block
+    width: 170px
+    height: 80px
+    background-position: center center
+    background-size: contain
+    background-repeat: no-repeat
+  .header-list-itens
+    display: flex
+    justify-content: flex-start
+    align-items: center
+    .menu-box
+      color: #FFF
+      padding: 15px 30px 15px 0
+      font-size: 30px
+      cursor: pointer
+    .brand-box
+      margin-right: 15px
+    .phrase-box
+      padding-left: 15px
+      padding-left: 15px
+      font-size: 3rem
+      line-height: 1.2
+      border-left: 1px solid #FFFFFF
+    .end-box
+      justify-self: flex-end
+
+</style>

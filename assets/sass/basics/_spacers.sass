@@ -1,0 +1,28 @@
+// ==========================================================================
+// BASICS > SPACERS
+// ==========================================================================
+
+@each $value in $spacer-config
+	.spacer-#{nth($value, 1)}
+		display: block
+		height: nth($value, 2)
+
+@include until($fullhd)
+	@each $value in $spacer-config
+		.spacer-#{nth($value, 1)}
+			height: nth($value, 3)
+
+@include until($widescreen)
+	@each $value in $spacer-config
+		.spacer-#{nth($value, 1)}
+			height: nth($value, 4)
+
+@include until($desktop)
+	@each $value in $spacer-config
+		.spacer-#{nth($value, 1)}
+			height: nth($value, 5)
+
+@include until($tablet)
+	@each $value in $spacer-config
+		.spacer-#{nth($value, 1)}
+			height: nth($value, 6)

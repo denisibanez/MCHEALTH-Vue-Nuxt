@@ -1,0 +1,15 @@
+// ==========================================================================
+// BASICS > SELECTION COLORS
+// ==========================================================================
+
+::selection
+	background: map-get($color-config, "black")
+
+::-moz-selection
+	background: map-get($color-config, "black")
+
+img::selection
+	background: transparent
+
+img::-moz-selection
+	background: transparent
