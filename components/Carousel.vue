@@ -7,9 +7,10 @@
             :key="slide.index" 
             ref="refSlides"
             class="slide" 
-            :class="getSlideClass(slide.index)" 
+            :class="getSlideClass(slide)" 
             v-on:mousemove="handleMouseMove($event, slide.index)"
             v-on:mouseleave="handleMouseLeave($event, slide.index)"
+            v-on:click="handleClick(slide)"
             :style="{ '--x': x, '--y': y }">
             <div class="slide__image-wrapper">
               <img 
@@ -17,15 +18,14 @@
                 :src="require('@/assets/images/' + slide.imgName)"
               />
             </div>
-            
             <article class="slide__content">
-              <h2 class="slide__headline">
+              <h2 class="slide__headline font-weight-bold">
                 {{ slide.headline }}
               </h2>
               <p class="slide__description">
                 {{ slide.description }}
               </p>
-              <button class="slide__action btn">
+              <button class="slide__action btn btn-default-orange-button-arrow lay-color-black" data-stick-cursor>
                 {{ slide.button }}              
               </button>
             </article>
@@ -62,189 +62,215 @@
         this.x = 0;
         this.y = 0;
       },
-      getSlideClass: function(index) {
-        if (index == this.current) {
-          return 'slide--current';
-        } else if (index < this.current) {
-          return 'slide--previous';
-        } else if (index > this.current) {
-          return 'slide--next';
+      handleClick: function(slide) {
+        if (slide.enabled === true) {
+          if (slide.index == this.current) {
+            console.log("LINK");
+          } else if (slide.index < this.current) {
+            this.current -= 1;
+          } else if (slide.index > this.current) {
+            this.current += 1;;
+          }
         }
+      },
+      getSlideClass: function(slide) {
+        let class1 = "";
+        let class2 = "";
+        if (slide.index == this.current) {
+          class1 = "slide--current";
+        } else if (slide.index < this.current) {
+          class1 = "slide--previous";
+        } else if (slide.index > this.current) {
+          class1 = "slide--next";
+        }
+
+        if (slide.enabled != true) {
+          class2 = "disabled";
+        }
+
+        return class1 + " " + class2;
+      },
+      setSliderPosition: function () {
+        this.wrapperTransform = {
+          'transform': `translateX(-${this.current * (100 / 3)}%)`
+        };      
       }
     }, 
     mounted() {
-      this.wrapperTransform = {
-        // 'transform': `translateX(-${this.current * (100 / this.slideData.length)}%)`
-        'transform': `translateX(-${this.current * (100 / 3)}%)`
-      };
+      this.setSliderPosition();
+    },
+    watch: {
+      current: function() {
+        this.setSliderPosition();
+      }
     }
   }
 </script>
 
-<style lang="scss" scoped>
-  
-  $base-duration: 600ms;
-  $base-ease: cubic-bezier(0.25, 0.46, 0.45, 0.84);
+<style lang="sass" scoped>
+  $base-duration: 600ms
+  $base-ease: cubic-bezier(0.25, 0.46, 0.45, 0.84)
 
-  $slide-size-width: 80vmin;
-  $slide-size-height: calc(100vmin - 105px - 105px);
-  $slide-margin: 4vmin;
+  $slide-size-width: 70vmin
+  $slide-size-height: calc(100vmin - 105px - 105px)
+  $slide-margin: 4vmin
 
-  .c-carousel {
-    align-items: center;
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    overflow-x: hidden;
-    width: 100%;
-    margin: 15px 0;
-  }
-  .slider {
-    height: $slide-size-height;
-    margin: 0 auto;
-    position: relative;
-    width: $slide-size-width;
-  }
-  .slider__wrapper {
-    display: flex;
-    margin: 0 calc($slide-margin * -1);
-    position: absolute;
-    transition: transform 600ms cubic-bezier(0.25, 1, 0.35, 1);
-  }
-  .slide {
-    align-items: center;
-    border-radius: 2%;
-    overflow: hidden;
-    color: white;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    height: $slide-size-height;
-    justify-content: flex-end;
-    margin: 0 $slide-margin;
-    opacity: 0.25;
-    position: relative;
-    text-align: center;
-    transition: 
-      opacity calc(600ms / 2) cubic-bezier(0.25, 0.46, 0.45, 0.84),
-      transform calc(600ms / 2) cubic-bezier(0.25, 0.46, 0.45, 0.84);
-    width: $slide-size-width;
-    z-index: 1;
-    
+  .c-carousel
+    position: absolute
+    top: 0
+    left: 0
+    align-items: center
+    display: flex
+    height: 100%
+    justify-content: center
+    overflow-x: hidden
+    width: 100%
+
+  .slider
+    height: $slide-size-height
+    margin: 0 auto
+    position: relative
+    width: $slide-size-width
+    *
+      -webkit-touch-callout: none
+      -webkit-user-select: none
+      -khtml-user-select: none
+      -moz-user-select: none
+      -ms-user-select: none
+      user-select: none
+
+  .slider__wrapper
+    display: flex
+    margin: 0 ($slide-margin * -2)
+    position: absolute
+    transition: transform $base-duration cubic-bezier(0.25, 1, 0.35, 1)
+
+  .slide
+    align-items: center
+    color: white
+    display: flex
+    flex: 1
+    flex-direction: column
+    height: $slide-size-height
+    justify-content: flex-end
+    margin: 0 $slide-margin
+    opacity: 0.25
+    position: relative
+    text-align: center
+    transition: opacity ($base-duration / 2) $base-ease, transform ($base-duration / 2) $base-ease
+    width: $slide-size-width
+    z-index: 1
+
+    &.disabled
+      &:hover
+        cursor: default !important
+      .slide__action
+        opacity: 0
+        visibility: hidden
+
     &--previous,
-    &--next {    
-      .slide__image-wrapper {
-        filter: grayscale(1);
-      }
-
-      &:hover {
-        opacity: 0.5;
-        .slide__image-wrapper {
-          filter: grayscale(.8);
-        }
-      }
-    }
-    &--previous {
-      cursor: w-resize;
+    &--next
+      .slide__image-wrapper
+        filter: grayscale(1)
       
-      &:hover {
-        transform: translateX(2%);
-      }
-    }
-    &--next {
-      cursor: e-resize;
-      
-      &:hover {
-        transform: translateX(-2%);
-      }
-    }
-  }
+      .slide__description
+        opacity: 0
+        max-height: 0
+        transform: translate(0px, 30px)
 
-  .slide--current {
-    --x: 0;
-    --y: 0;
-    --d: 50;
+      &:hover
+        opacity: 0.5
+        .slide__image-wrapper
+          filter: grayscale(0.8)
 
-    opacity: 1;
-    pointer-events: auto;
-    user-select: auto;
+    &--previous
+      cursor: w-resize
+      &:hover
+        transform: translateX(2%)
 
-    @media (hover: hover) {
-      &:hover .slide__image-wrapper {
-        transform: 
-          scale(1.025)
-          translate(
-            calc(var(--x) / var(--d) * 1px),
-            calc(var(--y) / var(--d) * 1px)
-          );
-      }    
-    }
-  }
-  .slide__image-wrapper {
-    background-color: #000;
-    height: 100%;
-    left: 0%;
-    overflow: hidden;
-    position: absolute;
-    top: 0%;  
-    transition: transform calc(600ms / 4) cubic-bezier(0.25, 0.46, 0.45, 0.84);
-    width: 100%;
-  }
-  .slide__image {
-    --d: 20;
+    &--next
+      cursor: e-resize
+      &:hover
+        transform: translateX(-2%)
 
-    height: 110%;
-    left: -5%;
-    object-fit: cover;
-    pointer-events: none;
-    position: absolute;
-    top: -5%;
-    transition:
-      opacity 600ms cubic-bezier(0.25, 0.46, 0.45, 0.84),
-      transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.84);
-    user-select: none;
-    width: 110%;
-    max-width: 110%;
-    
-    @media (hover: hover) {
-      .slide--current & {      
-        transform: 
-          translate(
-            calc(var(--x) / var(--d) * 1px),
-            calc(var(--y) / var(--d) * 1px)
-          ); 
-      }
-    }
-  }
-  .slide__headline {
-    font-size: 8vmin;
-    font-weight: 600;
-    position: relative;
-  }
-  .slide__content {
-    --d: 60;
-  
-    opacity: 0;
-    padding: 4vmin;
-    position: relative;
-    transition: transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.84);
-    visibility: hidden;
-    .slide--current & {
-      animation: fadeIn calc(600ms / 2) cubic-bezier(0.25, 0.46, 0.45, 0.84) forwards;
-      visibility: visible;
+  .slide--current
+    --x: 0
+    --y: 0
+    --d: 50
+    opacity: 1
+    pointer-events: auto
+    user-select: auto
+    .slide__image-wrapper::before
+      opacity: 1
 
-      @media (hover: hover) {
-        transform: 
-          translate(
-            calc(var(--x) / var(--d) * -1px),
-            calc(var(--y) / var(--d) * -1px)
-          );
-      }
-    }
-  }
+    @media (hover: hover)
+      &:hover .slide__image-wrapper
+        transform: scale(1.025) translate(calc(var(--x) / var(--d) * 1px), calc(var(--y) / var(--d) * 1px))
 
-  @keyframes fadeIn {
-    from { opacity: 0 }
-    to   { opacity: 1 }
-  }
+  .slide__image-wrapper
+    background-color: #161515
+    height: 100%
+    left: 0%
+    border-radius: 2%
+    overflow: hidden
+    position: absolute
+    top: 0%
+    transition: transform ($base-duration / 4) $base-ease
+    width: 100%
+    &::before
+      display: block
+      content: " "
+      position: absolute
+      bottom: 0
+      left: 0
+      width: 100%
+      height: 80%
+      z-index: 5
+      opacity: .5
+      transition: opacity ($base-duration / 2) $base-ease
+      background: linear-gradient(0deg, rgba(10,10,10,1) 0%, rgba(10,10,10,1) 15%, rgba(10,10,10,0) 100%)
+
+  .slide__image
+    --d: 20
+    height: 110%
+    left: -5%
+    object-fit: cover
+    pointer-events: none
+    position: absolute
+    top: -5%
+    transition: opacity $base-duration $base-ease, transform $base-duration $base-ease
+    user-select: none
+    width: 110%
+    max-width: 110%
+    @media (hover: hover)
+      .slide--current &
+        transform: translate(calc(var(--x) / var(--d) * 1px), calc(var(--y) / var(--d) * 1px))
+
+  .slide__headline
+    font-size: 8vmin
+    font-weight: 600
+    position: relative
+
+  .slide__description
+    transition: all ($base-duration / 1.5) $base-ease
+    max-height: 150px
+    opacity: 1
+    transform: translate(0px, 0px)
+
+  .slide__content
+    --d: 40
+    padding: 5vmin 7vmin
+    position: relative
+    z-index: 10
+    transition: transform $base-duration $base-ease
+    .slide--current &
+      animation: fadeIn ($base-duration / 2) $base-ease forwards
+      @media (hover: hover)
+        transform: translate(calc(var(--x) / var(--d) * -1px), calc(var(--y) / var(--d) * -1px))
+
+  @keyframes fadeIn
+    from
+      opacity: 0
+    to
+      opacity: 1
 </style>

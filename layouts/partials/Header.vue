@@ -1,20 +1,26 @@
 <template>
   <div class="c-header">
     <div class="container">
-      <div class="header-list-itens">
-        <div class="menu-box">
-          MN
-        </div>
-        <div class="brand-box">
-          <a class="header-logo" :style="{ backgroundImage: 'url(' + require('@/assets/images/logo-estadao-raiox-white.svg') + ')' }" >
-            <span></span>
-          </a>
-        </div>
-        <div class="phrase-box lay-color-blue font-bebasneue">
-          {{ msg }}
-        </div>
-        <div class="end-box">
-
+      <div class="row">
+        <div class="col">
+          <div class="header-list-itens">
+            <!--
+            <div class="menu-box">
+              MN
+            </div>
+            -->
+            <div class="brand-box">
+              <a class="header-logo" :style="{ backgroundImage: 'url(' + require('@/assets/images/logo-estadao-raiox-white.svg') + ')' }" >
+                <span></span>
+              </a>
+            </div>
+            <div class="phrase-box lay-color-blue font-bebasneue font-size-header-featured">
+              {{ msg }}
+            </div>
+            <div class="end-box">
+            
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -39,8 +45,14 @@
 </script>
 
 <style lang="sass" scoped>
+  @import "../../node_modules/bootstrap/scss/functions"
+  @import "../../node_modules/bootstrap/scss/variables"
+  @import "../../node_modules/bootstrap/scss/mixins"
+
   .c-header 
     width: 100%
+    position: relative
+    z-index: 5
   .header-logo 
     display: inline-block
     width: 170px
@@ -62,10 +74,21 @@
     .phrase-box
       padding-left: 15px
       padding-left: 15px
-      font-size: 3rem
       line-height: 1.2
       border-left: 1px solid #FFFFFF
     .end-box
       justify-self: flex-end
+
+  @include media-breakpoint-down(lg)
+
+  @include media-breakpoint-down(md)
+    .header-logo 
+      display: inline-block
+      width: 120px
+      height: 50px
+
+  @include media-breakpoint-down(sm)
+
+  @include media-breakpoint-down(xs)
 
 </style>

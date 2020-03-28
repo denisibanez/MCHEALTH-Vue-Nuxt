@@ -1,9 +1,11 @@
 <template>
   <div class="c-footer">
     <div class="container">
-      <div class="columns">
+      <div class="row align-items-center">
         <div class="col">
-          {{ msg }}
+          <div class="col py-3 text-center lay-color-light-gray">
+            {{ msg }}
+          </div>
         </div>
       </div>
     </div>
@@ -28,7 +30,24 @@
 </script>
 
 <style lang="sass" scoped>
+  @import "../../node_modules/bootstrap/scss/functions"
+  @import "../../node_modules/bootstrap/scss/variables"
+  @import "../../node_modules/bootstrap/scss/mixins"
+
   .c-footer 
     width: 100%
     text-align: center
+    position: absolute
+    bottom: 0
+
+  .c-footer .row
+    height: 90px
+
+  @include media-breakpoint-down(lg)
+
+  @include media-breakpoint-down(md)
+
+  @include media-breakpoint-down(sm)
+
+  @include media-breakpoint-down(xs)
 </style>

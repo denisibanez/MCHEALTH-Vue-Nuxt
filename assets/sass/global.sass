@@ -1,36 +1,17 @@
 @charset "utf-8"
 
-// ================= Bulma Framework
-
-// ====== Set your brand colors
-// $purple: #8A4D76
-// $pink: #FA7C91
-// $brown: #757763
-// $beige-light: #D0D1CD
-// $beige-lighter: #EFF0EB
-
-// ====== Update Bulma's global variables
-// $family-sans-serif: "Nunito", sans-serif
-// $grey-dark: $brown
-// $grey-light: $beige-light
-// $primary: $purple
-// $link: $pink
-// $widescreen-enabled: false
-// $fullhd-enabled: false
-
-// ====== Update some of Bulma's component variables
-// $control-border-width: 2px
-// $input-border-color: transparent
-// $input-shadow: none
+// ================= Bootstrap Framework
 
 // ====== Import only what you need from Bulma
-@import "../../node_modules/bulma/sass/utilities/_all"
-@import "../../node_modules/bulma/sass/base/_all"
-@import "../../node_modules/bulma/sass/elements/button"
-@import "../../node_modules/bulma/sass/elements/container"
-@import "../../node_modules/bulma/sass/form/_all"
-@import "../../node_modules/bulma/sass/components/navbar"
-
+@import "../../node_modules/bootstrap/scss/functions"
+@import "../../node_modules/bootstrap/scss/variables"
+@import "../../node_modules/bootstrap/scss/mixins"
+@import "../../node_modules/bootstrap/scss/root"
+@import "../../node_modules/bootstrap/scss/reboot"
+@import "../../node_modules/bootstrap/scss/type"
+@import "../../node_modules/bootstrap/scss/grid"
+@import "../../node_modules/bootstrap/scss/forms"
+@import "../../node_modules/bootstrap/scss/utilities"
 
 // ================= Custom Styles
 
@@ -41,5 +22,7 @@
 @import "./basics/selection-colors"
 @import "./basics/spacers"
 @import "./basics/typography"
+@import "./modules/button-default"
+@import "./modules/mouse-cursor"
 
 

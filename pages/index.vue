@@ -16,6 +16,7 @@ export default {
       slideData: [
         {
           index: 0,
+          enabled: false,
           headline: 'POLUIÇÃO',
           description: 'Enquanto não há vacina contra pragas digitais, nos resta explicar os diversos aspectos sobre as vacinas e derrubar todos os mitos que rodeiam o tema.',
           button: 'Descubra',
@@ -24,6 +25,7 @@ export default {
         {
           index: 1,
           headline: 'VACINAS',
+          enabled: true,
           description: 'Enquanto não há vacina contra pragas digitais, nos resta explicar os diversos aspectos sobre as vacinas e derrubar todos os mitos que rodeiam o tema.',
           button: 'Descubra',
           imgName: 'banner-vacinas.png'
@@ -31,6 +33,7 @@ export default {
         {
           index: 2,
           headline: 'DEPRESSÃO',
+          enabled: false,
           description: 'Enquanto não há vacina contra pragas digitais, nos resta explicar os diversos aspectos sobre as vacinas e derrubar todos os mitos que rodeiam o tema.',
           button: 'Descubra',
           imgName: 'banner-depressao.png'
