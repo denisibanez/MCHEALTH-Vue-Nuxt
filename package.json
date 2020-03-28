@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
+    "gsap": "^3.2.6",
     "nuxt": "^2.0.0"
   },
   "devDependencies": {

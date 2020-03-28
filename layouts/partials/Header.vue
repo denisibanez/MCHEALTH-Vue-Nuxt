@@ -1,7 +1,7 @@
 <template>
   <div class="c-header">
     <div class="container">
-      <div class="row">
+      <div class="row align-items-center">
         <div class="col">
           <div class="header-list-itens">
             <!--
@@ -45,14 +45,16 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "../../node_modules/bootstrap/scss/functions"
-  @import "../../node_modules/bootstrap/scss/variables"
-  @import "../../node_modules/bootstrap/scss/mixins"
+  @import '~bootstrap/scss/functions'
+  @import '~bootstrap/scss/variables'
+  @import '~bootstrap/scss/mixins'
 
   .c-header 
     width: 100%
     position: relative
     z-index: 5
+    .row
+      height: 90px 
   .header-logo 
     display: inline-block
     width: 170px
@@ -90,5 +92,7 @@
   @include media-breakpoint-down(sm)
 
   @include media-breakpoint-down(xs)
-
+    .c-header
+      .row
+        height: 80px 
 </style>

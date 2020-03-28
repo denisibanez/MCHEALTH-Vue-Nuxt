@@ -1,15 +1,27 @@
 <template>
-  <div>
-    <div class="cursor" data-cursor><div></div></div>
+  <div id="page">
+    <div class="c-cursor">
+      <div class="c-cursor__pointer"><div class="point"></div></div>
+    </div>
+
     <Header msg="A VERDADEIRA DOENCA É A DESINFORMAÇÃO." />
     <nuxt />
-    <Footer msg="A verdadeira doenca é a desinformação, sed diam nonumy eirmod tempor invidunt ut" />
+    <Footer msg="A verdadeira doenca é a desinformação, sed diam nonumy eirmod tempor." />
   </div>
 </template>
 
 <script>
   import Header from "./partials/Header";
   import Footer from "./partials/Footer";
+  import gsap from "gsap";
+  import TweenMax from "gsap";
+  import TweenLite from "gsap";
+  import Power2 from "gsap";
+  import Power4 from "gsap";
+  
+  if (process.client) {
+    gsap.registerPlugin(TweenMax, TweenLite, Power2, Power4); 
+  }
 
   export default {
     components: {
@@ -17,156 +29,136 @@
       Footer,
     },
     methods: {
-      createCursor: function () {
 
-      }
     },
     mounted() {
-        const math = {
-          lerp: (a, b, n) => {
-            return (1 - n) * a + n * b
+      class MouseCursor {
+        constructor() {
+          this.page = document.querySelector('#page');
+
+          const cursor = document.querySelector('.c-cursor__pointer');
+
+          TweenLite.to(cursor, {
+            autoAlpha: 0,
+          });
+        }
+
+        // eslint-disable-next-line class-methods-use-this
+        moveMousePos(e) {
+          const mousePosX = e.clientX;
+          const mousePosY = e.clientY;
+          const cursor = document.querySelector('.c-cursor__pointer');
+          
+          if (e.target.classList.contains('c-magnetic')) return;
+
+          TweenLite.to(cursor, 0.5, {
+            x: mousePosX,
+            y: mousePosY,
+            ease: Power4.easeOut,
+          });
+        }
+
+        // eslint-disable-next-line class-methods-use-this
+        enterMouse() {
+          const cursor = document.querySelector('.c-cursor__pointer');
+
+          TweenLite.to(cursor, 1, {
+            autoAlpha: 1,
+            ease: Power4.easeIn,
+          });
+        }
+
+        handleMousePos() {
+          this.page.addEventListener('mouseenter', this.enterMouse);
+          this.page.addEventListener('mousemove', this.moveMousePos, false);
+        }
+
+        // eslint-disable-next-line class-methods-use-this
+        updateOnHover(e) {
+          const { tagName, classList } = e.target;
+
+          if (tagName === 'LABEL' ||
+            tagName === 'A' ||
+            tagName === 'BUTTON' ||
+            classList.contains('is-cursor-hover') ||
+            (e.target.parentElement.tagName === 'A' && e.target.tagName === 'IMG')
+          ) {
+            document.querySelector('html').classList.toggle('is-hover');
           }
         }
 
-        class Cursor {
-          constructor() {
-            this.el = document.querySelector('[data-cursor]')
-            this.stickies = [...document.querySelectorAll('[data-stick-cursor]')]
-
-            this.data = {
-              mouse: {
-                x: 0,
-                y: 0
-              },
-              current: {
-                x: 0,
-                y: 0
-              },
-              last: {
-                x: 0,
-                y: 0
-              },
-              ease: 0.15,
-              dist: 100,
-              fx: {
-                diff: 0,
-                acc: 0,
-                velo: 0,
-                scale: 0
-              }
-            }
-
-            this.bounds = {
-              h: 0,
-              a: 0
-            }
-
-            this.rAF = null
-            this.targets = null
-
-            this.run = this.run.bind(this)
-            this.mousePos = this.mousePos.bind(this)
-            this.stick = this.stick.bind(this)
-
-            this.state = {
-              stick: false
-            }
-
-            this.init()
-          }
-
-          mousePos(e) {
-            console.log('mousePos');
-            this.data.mouse.x = e.pageX
-            this.data.mouse.y = e.pageY
-
-            this.data.current.x = e.pageX
-            this.data.current.y = e.pageY
-          }
-
-          getCache() {
-            console.log('getCache');
-            this.targets = []
-
-            this.stickies.forEach((el, index) => {
-              const bounds = el.getBoundingClientRect()
-
-              this.targets.push({
-                el: el,
-                x: bounds.left + bounds.width / 2,
-                y: bounds.top + bounds.height / 2
-              })
-            })
-          }
-
-          stick(target) {
-            console.log('stick');
-            const d = {
-              x: target.x - this.data.mouse.x,
-              y: target.y - this.data.mouse.y
-            }
-
-            const a = Math.atan2(d.x, d.y)
-            const h = Math.sqrt(d.x * d.x + d.y * d.y)  
-
-            if (h < this.data.dist && !this.state.stick) {
-
-              this.state.stick = true
-              this.data.ease = 0.075
-
-              this.data.current.x = target.x - Math.sin(a) * h / 2.5
-              this.data.current.y = target.y - Math.cos(a) * h / 2.5
-
-              this.el.classList.add('is-active')
-
-              console.log('ADD')
-            } else if (this.state.stick) {
-
-              this.state.stick = false
-              this.data.ease = 0.15
-            } else if (h > this.data.dist) {
-              console.log('REMOVE')
-
-              // this.el.classList.remove('is-active')
-            }
-          }
-
-          run() {
-            console.log('run');
-            this.targets.forEach(this.stick)
-
-            this.data.last.x = math.lerp(this.data.last.x, this.data.current.x, this.data.ease)
-            this.data.last.y = math.lerp(this.data.last.y, this.data.current.y, this.data.ease)   
-
-            this.data.fx.diff = this.data.current.x - this.data.last.x
-            this.data.fx.acc = this.data.fx.diff / window.innerWidth
-            this.data.fx.velo =+ this.data.fx.acc
-            this.data.fx.scale = 1 - Math.abs(this.data.fx.velo * 5)
-
-            this.el.style.transform = `translate3d(${this.data.last.x}px, ${this.data.last.y}px, 0) scale(${this.data.fx.scale})`
-
-            this.raf()
-          }
-
-          raf() {
-            console.log('raf');
-            this.rAF = requestAnimationFrame(this.run)
-          }
-
-          addListeners() {
-            console.log('addListeners');
-            window.addEventListener('mousemove', this.mousePos, { passive: true })
-          }
-
-          init() {
-            console.log('init');
-            this.getCache()
-            this.addListeners()
-            this.raf()
-          }
+        handleLinkHover() {
+          this.page.addEventListener('mouseover', this.updateOnHover.bind(this));
+          this.page.addEventListener('mouseout', this.updateOnHover.bind(this));
         }
 
-        const cursor = new Cursor()
+        render() {
+          this.handleMousePos();
+          this.handleLinkHover();
+        }
+      }
+
+      class MagneticCursor {
+        constructor() {
+          this.links = [...document.querySelectorAll('.c-magnetic')];
+          this.cursor = document.querySelector('.c-cursor__pointer');
+          this.pos = { x: 0, y: 0 };
+        }
+        
+        activateMagnetic() {
+          this.links.map(link => {
+            const that = this;
+            link.addEventListener('mousemove', function(e) {
+              // that.moveTarget(e, this, this.querySelector('span'), 20);
+              that.moveTarget(e, this, this, 30);
+              that.moveCursor(e, this, 1.5);
+            });
+            
+            link.addEventListener('mouseout', function() {
+              // TweenMax.to(this.querySelector('span'), 0.3, {
+              TweenMax.to(this, 0.3, {
+                x: 0,
+                y: 0
+              });
+            });
+          });
+        }
+        
+        moveCursor(e, link, force) {
+          var rect = link.getBoundingClientRect();
+          var relX = e.pageX - rect.left;
+          var relY = e.pageY - rect.top;
+          this.pos.x = rect.left + rect.width / 2 + (relX - rect.width / 2) / force;
+          this.pos.y = rect.top + rect.height / 2 + (relY - rect.height / 2) / force;
+
+          TweenMax.to(this.cursor, 0.3, {
+            x: this.pos.x,
+            y: this.pos.y
+          });
+        }
+        
+        moveTarget(e, link, span, force) {
+          var boundingRect = link.getBoundingClientRect();
+          var relX = e.pageX - boundingRect.left;
+          var relY = e.pageY - boundingRect.top;
+
+          TweenMax.to(span, 0.3, {
+            x: (relX - boundingRect.width / 2) / boundingRect.width * force,
+            y: (relY - boundingRect.height / 2) / boundingRect.height * force,
+            ease: Power2.easeOut
+          });
+        }
+        
+        render() {
+          this.activateMagnetic();
+        }
+      }
+
+      const mouseCursor = new MouseCursor();
+      const magneticCursor = new MagneticCursor();
+
+      mouseCursor.render();
+      magneticCursor.render();
     }
   }
 </script>

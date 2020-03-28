@@ -40,6 +40,14 @@ export default {
         },
       ]
     }
+  },
+  head () {
+    return {
+      title: "Estadão - RaioX",
+      meta: [
+        { hid: 'description', name: 'description', content: 'A verdadeira doenca é a desinformação' }
+      ]
+    }
   }
 }
 </script>

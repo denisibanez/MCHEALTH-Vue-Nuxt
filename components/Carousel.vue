@@ -1,7 +1,7 @@
 <template>
   <div class="c-carousel">
       <div class='slider'>
-        <ul class="slider__wrapper" :style="wrapperTransform">
+        <ul class="slider__wrapper" ref="refWrapper" style="wrapperTransform">
           <li 
             v-for="slide in slideData"
             :key="slide.index" 
@@ -25,8 +25,10 @@
               <p class="slide__description">
                 {{ slide.description }}
               </p>
-              <button class="slide__action btn btn-default-orange-button-arrow lay-color-black" data-stick-cursor>
-                {{ slide.button }}              
+              <button class="slide__action btn btn-default-orange-button-arrow lay-color-black c-magnetic">
+                <span>
+                  {{ slide.button }}              
+                </span>  
               </button>
             </article>
           </li>
@@ -36,6 +38,14 @@
 </template>
 
 <script>
+  import gsap from "gsap";
+  import TweenLite from "gsap";
+  import Draggable from "gsap/Draggable";
+
+  if (process.client) {
+    gsap.registerPlugin(Draggable, TweenLite);
+  }
+
   export default {
     name: 'Carousel',
     props: {
@@ -47,6 +57,7 @@
         wrapperTransform: null,
         x: 0,
         y: 0,
+        draggable: null
       }
     },
     methods: {
@@ -69,7 +80,24 @@
           } else if (slide.index < this.current) {
             this.current -= 1;
           } else if (slide.index > this.current) {
-            this.current += 1;;
+            this.current += 1;
+          }
+        }
+      },
+      controlGoTo: function (target) {
+        let limit = this.slideData.length - 1;
+
+        if (target === "next") {
+          if (this.current === limit) {
+            this.current = limit;
+          } else {
+            this.current += 1;
+          }
+        } else if (target === "prev") {
+          if (this.current === 0) {
+            this.current = 0;
+          } else {
+            this.current -= 1;
           }
         }
       },
@@ -91,28 +119,52 @@
         return class1 + " " + class2;
       },
       setSliderPosition: function () {
-        this.wrapperTransform = {
-          'transform': `translateX(-${this.current * (100 / 3)}%)`
-        };      
+        let width = this.$refs.refWrapper.clientWidth;
+        let limit = this.slideData.length;
+
+        TweenLite.set(".slider__wrapper", { x: percentToPixel(this.current, width, limit) } );
+      
+        function percentToPixel(current, width, limit) {
+          return ((current * (width / limit)) * -1) + "px"
+        }
+      },
+      controlSwipe: function() {
+        let dir = this.draggable.getDirection("start");
+        
+        if (dir == "left") {
+          this.controlGoTo("next");
+        } else if (dir == "right") {
+          this.controlGoTo("prev");
+        };
+
+        this.setSliderPosition();
       }
     }, 
     mounted() {
       this.setSliderPosition();
-    },
-    watch: {
-      current: function() {
-        this.setSliderPosition();
-      }
+
+      this.draggable = Draggable.create(".slider__wrapper", { 
+        type:"x", 
+        edgeResistance: 0.65, 
+        bounds: ".slider", 
+        inertia: true,
+        onDragEnd: this.controlSwipe
+      })[0];
     }
   }
 </script>
 
 <style lang="sass" scoped>
+  @import '~bootstrap/scss/functions'
+  @import '~bootstrap/scss/variables'
+  @import '~bootstrap/scss/mixins'
+
   $base-duration: 600ms
   $base-ease: cubic-bezier(0.25, 0.46, 0.45, 0.84)
 
   $slide-size-width: 70vmin
   $slide-size-height: calc(100vmin - 105px - 105px)
+  $slide-size-height-xs: calc(90vh - 80px - 80px)
   $slide-margin: 4vmin
 
   .c-carousel
@@ -123,7 +175,7 @@
     display: flex
     height: 100%
     justify-content: center
-    overflow-x: hidden
+    overflow: hidden
     width: 100%
 
   .slider
@@ -141,9 +193,12 @@
 
   .slider__wrapper
     display: flex
-    margin: 0 ($slide-margin * -2)
+    margin: 0 ($slide-margin * -1)
+    padding-left: 0
     position: absolute
     transition: transform $base-duration cubic-bezier(0.25, 1, 0.35, 1)
+    z-index: initial !important
+    cursor: auto !important
 
   .slide
     align-items: center
@@ -162,6 +217,7 @@
     z-index: 1
 
     &.disabled
+      filter: grayscale(1) !important
       &:hover
         cursor: default !important
       .slide__action
@@ -273,4 +329,19 @@
       opacity: 0
     to
       opacity: 1
+
+  @include media-breakpoint-down(lg)
+
+  @include media-breakpoint-down(md)
+
+  @include media-breakpoint-down(sm)
+
+  @include media-breakpoint-down(xs)
+    .slide,
+    .slider
+      height: $slide-size-height-xs
+      width: 80vmin
+
+    .slide__image-wrapper::before
+        height: 130%
 </style>
