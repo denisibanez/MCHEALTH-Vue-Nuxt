@@ -1,5 +1,5 @@
 <template>
-  <div class="c-header">
+  <div class="c-header" ref="cHeader">
     <div class="container">
       <div class="row align-items-center">
         <div class="col">
@@ -10,9 +10,9 @@
             </div>
             -->
             <div class="brand-box">
-              <a class="header-logo" :style="{ backgroundImage: 'url(' + require('@/assets/images/logo-estadao-raiox-white.svg') + ')' }" >
+              <nuxt-link to="/" class="header-logo c-magnetic" :style="{ backgroundImage: 'url(' + require('@/assets/images/logo-estadao-raiox-white.svg') + ')' }" >
                 <span></span>
-              </a>
+              </nuxt-link>
             </div>
             <div class="phrase-box lay-color-blue font-bebasneue font-size-header-featured">
               {{ msg }}
@@ -28,18 +28,32 @@
 </template>
 
 <script>
+  import gsap from "gsap";
+  import TweenLite from "gsap";
+  import Power4 from "gsap";
+
+  if (process.client) {
+    gsap.registerPlugin(TweenLite, Power4);
+  }
+
   export default {
     name: 'Header',
     props: {
       msg: String
+    },
+    data: function() {
+      return {
+        initTl: null
+      }
     },
     methods: {
       init: function () {
 
       }
     }, 
-    created: function() {
-        
+    mounted: function() {
+      const { cHeader } = this.$refs;
+      TweenLite.from(cHeader, .5, { autoAlpha: 0, ease: Power4.easeOut }).delay(.5)
     }
   }
 </script>

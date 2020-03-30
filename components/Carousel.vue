@@ -1,5 +1,5 @@
 <template>
-  <div class="c-carousel">
+  <div class="c-carousel" ref="cCarousel">
       <div class='slider'>
         <ul class="slider__wrapper" ref="refWrapper" style="wrapperTransform">
           <li 
@@ -25,11 +25,9 @@
               <p class="slide__description">
                 {{ slide.description }}
               </p>
-              <button class="slide__action btn btn-default-orange-button-arrow lay-color-black c-magnetic">
-                <span>
-                  {{ slide.button }}              
-                </span>  
-              </button>
+              <nuxt-link :to="slide.link" class="slide__action btn btn-default-orange-button-arrow lay-color-black c-magnetic">
+                  {{ slide.button }}
+              </nuxt-link>
             </article>
           </li>
         </ul>
@@ -41,9 +39,10 @@
   import gsap from "gsap";
   import TweenLite from "gsap";
   import Draggable from "gsap/Draggable";
+  import Power4 from "gsap";
 
   if (process.client) {
-    gsap.registerPlugin(Draggable, TweenLite);
+    gsap.registerPlugin(Draggable, TweenLite, Power4);
   }
 
   export default {
@@ -52,7 +51,7 @@
       slideData: Array
     },
     data: function() {
-      return  {
+      return {
         current: 1,
         wrapperTransform: null,
         x: 0,
@@ -64,9 +63,11 @@
       handleMouseMove: function(event, index) {
         let ref = this.$refs.refSlides[index];
 
-        if (index == this.current) {
-          this.x = event.clientX - (ref.getBoundingClientRect().left + Math.floor(ref.clientWidth / 2));
-          this.y = event.clientY - (ref.getBoundingClientRect().top + Math.floor(ref.clientHeight / 2));
+        if (ref) {
+          if (index == this.current) {
+            this.x = event.clientX - (ref.getBoundingClientRect().left + Math.floor(ref.clientWidth / 2));
+            this.y = event.clientY - (ref.getBoundingClientRect().top + Math.floor(ref.clientHeight / 2));
+          }
         }
       },
       handleMouseLeave: function(event, index) {    
@@ -74,32 +75,34 @@
         this.y = 0;
       },
       handleClick: function(slide) {
-        if (slide.enabled === true) {
-          if (slide.index == this.current) {
-            console.log("LINK");
-          } else if (slide.index < this.current) {
-            this.current -= 1;
-          } else if (slide.index > this.current) {
-            this.current += 1;
-          }
+        if (slide.index < this.current) {
+          this.controlGoTo("prev");
+        } else if (slide.index > this.current) {
+          this.controlGoTo("next");
         }
       },
       controlGoTo: function (target) {
         let limit = this.slideData.length - 1;
 
         if (target === "next") {
-          if (this.current === limit) {
-            this.current = limit;
-          } else {
-            this.current += 1;
+          if (this.current !== limit) {
+            let nextIndex = this.current + 1;
+
+            if (this.slideData[nextIndex].enabled) {
+              this.current = nextIndex;
+            }
           }
         } else if (target === "prev") {
-          if (this.current === 0) {
-            this.current = 0;
-          } else {
-            this.current -= 1;
+          if (this.current !== 0) {
+            let prevIndex = this.current - 1;
+
+            if (this.slideData[prevIndex].enabled) {
+              this.current = prevIndex;
+            }
           }
         }
+
+        this.setSliderPosition();
       },
       getSlideClass: function(slide) {
         let class1 = "";
@@ -136,12 +139,11 @@
         } else if (dir == "right") {
           this.controlGoTo("prev");
         };
-
-        this.setSliderPosition();
       }
     }, 
     mounted() {
       this.setSliderPosition();
+      const { cCarousel } = this.$refs;
 
       this.draggable = Draggable.create(".slider__wrapper", { 
         type:"x", 
@@ -150,6 +152,8 @@
         inertia: true,
         onDragEnd: this.controlSwipe
       })[0];
+
+      TweenLite.from(cCarousel, .5, { y: +30, opacity: 0, ease: Power4.easeOut }).delay(.5)
     }
   }
 </script>
@@ -215,6 +219,7 @@
     transition: opacity ($base-duration / 2) $base-ease, transform ($base-duration / 2) $base-ease
     width: $slide-size-width
     z-index: 1
+    transform: scale(1)
 
     &.disabled
       filter: grayscale(1) !important
@@ -226,6 +231,7 @@
 
     &--previous,
     &--next
+      transform: scale(.95)
       .slide__image-wrapper
         filter: grayscale(1)
       
@@ -240,14 +246,14 @@
           filter: grayscale(0.8)
 
     &--previous
-      cursor: w-resize
+      // cursor: w-resize
       &:hover
-        transform: translateX(2%)
+        transform: translateX(2%) scale(.95)
 
     &--next
-      cursor: e-resize
+      // cursor: e-resize
       &:hover
-        transform: translateX(-2%)
+        transform: translateX(-2%) scale(.95)
 
   .slide--current
     --x: 0

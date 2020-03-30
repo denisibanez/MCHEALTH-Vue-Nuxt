@@ -1,18 +1,14 @@
 <template>
   <div id="page">
-    <div class="c-cursor">
-      <div class="c-cursor__pointer"><div class="point"></div></div>
-    </div>
-
-    <Header msg="A VERDADEIRA DOENCA É A DESINFORMAÇÃO." />
+    <div class="c-cursor"><div class="c-cursor__pointer"><div class="point"></div></div></div>
+    <Header msg="A VERDADEIRA DOENÇA É A DESINFORMAÇÃO." />
     <nuxt />
-    <Footer msg="A verdadeira doenca é a desinformação, sed diam nonumy eirmod tempor." />
   </div>
 </template>
 
 <script>
   import Header from "./partials/Header";
-  import Footer from "./partials/Footer";
+
   import gsap from "gsap";
   import TweenMax from "gsap";
   import TweenLite from "gsap";
@@ -26,7 +22,12 @@
   export default {
     components: {
       Header,
-      Footer,
+    },
+    data: function() {
+      return {
+        mouseCursor: null,
+        magneticCursor: null,
+      }
     },
     methods: {
 
@@ -43,7 +44,6 @@
           });
         }
 
-        // eslint-disable-next-line class-methods-use-this
         moveMousePos(e) {
           const mousePosX = e.clientX;
           const mousePosY = e.clientY;
@@ -58,7 +58,6 @@
           });
         }
 
-        // eslint-disable-next-line class-methods-use-this
         enterMouse() {
           const cursor = document.querySelector('.c-cursor__pointer');
 
@@ -73,7 +72,6 @@
           this.page.addEventListener('mousemove', this.moveMousePos, false);
         }
 
-        // eslint-disable-next-line class-methods-use-this
         updateOnHover(e) {
           const { tagName, classList } = e.target;
 
@@ -83,7 +81,9 @@
             classList.contains('is-cursor-hover') ||
             (e.target.parentElement.tagName === 'A' && e.target.tagName === 'IMG')
           ) {
-            document.querySelector('html').classList.toggle('is-hover');
+            document.querySelector('html').classList.add('is-hover');
+          } else {
+            document.querySelector('html').classList.remove('is-hover')
           }
         }
 
@@ -95,6 +95,7 @@
         render() {
           this.handleMousePos();
           this.handleLinkHover();
+          this.enterMouse()
         }
       }
 
@@ -109,13 +110,11 @@
           this.links.map(link => {
             const that = this;
             link.addEventListener('mousemove', function(e) {
-              // that.moveTarget(e, this, this.querySelector('span'), 20);
               that.moveTarget(e, this, this, 30);
               that.moveCursor(e, this, 1.5);
             });
             
             link.addEventListener('mouseout', function() {
-              // TweenMax.to(this.querySelector('span'), 0.3, {
               TweenMax.to(this, 0.3, {
                 x: 0,
                 y: 0
@@ -154,12 +153,18 @@
         }
       }
 
-      const mouseCursor = new MouseCursor();
-      const magneticCursor = new MagneticCursor();
+      this.mouseCursor = new MouseCursor();
+      this.magneticCursor = new MagneticCursor();
 
-      mouseCursor.render();
-      magneticCursor.render();
-    }
+      this.mouseCursor.render();
+      this.magneticCursor.render();
+    },
+    watch: {
+      $route () {
+        this.mouseCursor.render();
+        this.magneticCursor.render();
+      }
+    },
   }
 </script>
 
