@@ -15,9 +15,9 @@
         <span id="parallax-chat"        :style="{ backgroundImage: 'url(' + require('@/assets/images/vacinas/parallax/layer-chat.png') + ')' }"></span>
         <span id="parallax-table"       :style="{ backgroundImage: 'url(' + require('@/assets/images/vacinas/parallax/layer-table.png') + ')' }"></span>
         <span id="parallax-notebook"    :style="{ backgroundImage: 'url(' + require('@/assets/images/vacinas/parallax/layer-notebook.png') + ')' }"></span>
-        <span id="parallax-shadow-bottom"></span>
         <span id="parallax-shadow-frame"></span>
         <span id="parallax-texture"     :style="{ backgroundImage: 'url(' + require('@/assets/images/vacinas/parallax/layer-texture.png') + ')' }"></span>
+        <span id="parallax-shadow-bottom"></span>
       </div>
       <div class="container">
         <div class="row align-items-center justify-content-end">
@@ -241,14 +241,6 @@ export default {
         margin-left: -15%
         bottom: 16%
 
-      #parallax-shadow-bottom
-        width: 100%
-        height: 40%
-        position: absolute
-        left: 0
-        bottom: 0
-        background: linear-gradient(0deg, rgba(22,21,21,1) 0%, rgba(22,21,21,0) 100%)
-
       #parallax-shadow-frame
         width: 100%
         height: 100%
@@ -266,6 +258,14 @@ export default {
         left: -10%
         background-size: initial
         background-repeat: repeat
+
+      #parallax-shadow-bottom
+        width: 100%
+        height: 40%
+        position: absolute
+        left: 0
+        bottom: 0
+        background: linear-gradient(0deg, rgba(27,30,33,1) 0%, rgba(22,21,21,0) 100%)
 
     #effect-trigger
       position: absolute

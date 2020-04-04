@@ -202,7 +202,7 @@
     position: absolute
     transition: transform $base-duration cubic-bezier(0.25, 1, 0.35, 1)
     z-index: initial !important
-    cursor: auto !important
+    // cursor: auto !important
 
   .slide
     align-items: center
@@ -224,7 +224,7 @@
     &.disabled
       filter: grayscale(1) !important
       &:hover
-        cursor: default !important
+        // cursor: default !important
       .slide__action
         opacity: 0
         visibility: hidden

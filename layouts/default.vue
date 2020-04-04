@@ -1,6 +1,9 @@
 <template>
   <div id="page">
-    <div class="c-cursor"><div class="c-cursor__pointer"><div class="point"></div></div></div>
+    <div class="c-cursor">
+      <div class="c-cursor__pointer"><div class="point"></div></div>
+      <div class="c-cursor__pointer__dot"><div class="point"></div></div>
+    </div>
     <Header msg="A VERDADEIRA DOENÇA É A DESINFORMAÇÃO." />
     <nuxt />
   </div>
@@ -33,13 +36,15 @@
 
     },
     mounted() {
+      // Custom Cursor
       class MouseCursor {
         constructor() {
           this.page = document.querySelector('#page');
 
           const cursor = document.querySelector('.c-cursor__pointer');
+          const cursor_dot = document.querySelector('.c-cursor__pointer__dot');
 
-          TweenLite.to(cursor, {
+          TweenLite.to([cursor, cursor_dot], {
             autoAlpha: 0,
           });
         }
@@ -48,10 +53,11 @@
           const mousePosX = e.clientX;
           const mousePosY = e.clientY;
           const cursor = document.querySelector('.c-cursor__pointer');
+          const cursor_dot = document.querySelector('.c-cursor__pointer__dot');
           
           if (e.target.classList.contains('c-magnetic')) return;
 
-          TweenLite.to(cursor, 0.5, {
+          TweenLite.to([cursor, cursor_dot], 0.3, {
             x: mousePosX,
             y: mousePosY,
             ease: Power4.easeOut,
@@ -60,10 +66,11 @@
 
         enterMouse() {
           const cursor = document.querySelector('.c-cursor__pointer');
+          const cursor_dot = document.querySelector('.c-cursor__pointer__dot');
 
-          TweenLite.to(cursor, 1, {
+          TweenLite.to([cursor, cursor_dot], {
             autoAlpha: 1,
-            ease: Power4.easeIn,
+            ease: Power4.easeOut,
           });
         }
 
@@ -103,6 +110,7 @@
         constructor() {
           this.links = [...document.querySelectorAll('.c-magnetic')];
           this.cursor = document.querySelector('.c-cursor__pointer');
+          this.cursor_dot = document.querySelector('.c-cursor__pointer__dot');
           this.pos = { x: 0, y: 0 };
         }
         
@@ -130,7 +138,7 @@
           this.pos.x = rect.left + rect.width / 2 + (relX - rect.width / 2) / force;
           this.pos.y = rect.top + rect.height / 2 + (relY - rect.height / 2) / force;
 
-          TweenMax.to(this.cursor, 0.3, {
+          TweenMax.to([this.cursor, this.cursor_dot], 0.3, {
             x: this.pos.x,
             y: this.pos.y
           });
@@ -155,7 +163,7 @@
 
       this.mouseCursor = new MouseCursor();
       this.magneticCursor = new MagneticCursor();
-
+      
       this.mouseCursor.render();
       this.magneticCursor.render();
     },
