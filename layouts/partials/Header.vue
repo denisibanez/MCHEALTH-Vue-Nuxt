@@ -10,11 +10,11 @@
             </div>
             -->
             <div class="brand-box">
-              <nuxt-link to="/" class="header-logo c-magnetic" :style="{ backgroundImage: 'url(' + require('@/assets/images/logo-estadao-raiox-white.svg') + ')' }" >
+              <nuxt-link to="/" class="header-logo c-magnetic" :style="{ backgroundImage: 'url(' + require('@/assets/images/logo-estadao-saude-e-ciencia-white.svg') + ')' }" >
                 <span></span>
               </nuxt-link>
             </div>
-            <div class="phrase-box lay-color-blue font-bebasneue font-size-header-featured">
+            <div class="phrase-box text-white-50 font-estadaoheadline font-size-header-featured">
               {{ msg }}
             </div>
             <div class="end-box">
@@ -71,14 +71,14 @@
       height: 90px 
   .header-logo 
     display: inline-block
-    width: 170px
+    width: 260px
     height: 80px
     background-position: center center
     background-size: contain
     background-repeat: no-repeat
   .header-list-itens
     display: flex
-    justify-content: flex-start
+    justify-content: center
     align-items: center
     .menu-box
       color: #FFF
@@ -91,7 +91,7 @@
       padding-left: 15px
       padding-left: 15px
       line-height: 1.2
-      border-left: 1px solid #FFFFFF
+      border-left: 1px solid rgba(#FFFFFF, .5)
     .end-box
       justify-self: flex-end
 
@@ -100,8 +100,9 @@
   @include media-breakpoint-down(md)
     .header-logo 
       display: inline-block
-      width: 120px
+      width: 200px
       height: 50px
+      
 
   @include media-breakpoint-down(sm)
 
@@ -109,4 +110,6 @@
     .c-header
       .row
         height: 80px 
+    .header-logo 
+      width: 150px
 </style>

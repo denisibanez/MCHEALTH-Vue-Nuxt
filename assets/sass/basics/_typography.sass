@@ -6,7 +6,19 @@
 
 @font-face
 	font-family: 'flama'
-	src: url('~assets/fonts/flama-basic-normal-webfont.woff2') format('woff2'), url('~assets/fonts/flama-basic-normal-webfont.woff') format('woff')
+	src: url('~assets/fonts/flama-book-normal-webfont.woff2') format('woff2'), url('~assets/fonts/flama-book-normal-webfont.woff') format('woff')
+	font-weight: normal
+	font-style: normal
+
+// @font-face
+// 	font-family: 'flama'
+// 	src: url('~assets/fonts/flama-basic-normal-webfont.woff2') format('woff2'), url('~assets/fonts/flama-basic-normal-webfont.woff') format('woff')
+// 	font-weight: normal
+// 	font-style: normal
+
+@font-face
+	font-family: 'estado-headline'
+	src: url('~assets/fonts/estado-headline-semibold-webfont.woff2') format('woff2'), url('~assets/fonts/estado-headline-semibold-webfont.woff') format('woff')
 	font-weight: normal
 	font-style: normal
 
@@ -33,6 +45,18 @@ hr
 
 .font-bebasneue
 	font-family: 'Bebas Neue', BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+
+.font-flama
+	font-family: 'flama', BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+
+.font-estadaoheadline
+	font-family: 'estado-headline', sans-serif
+
+.text-shadow-01
+	text-shadow: 3px 3px 8px rgba(0,0,0,0.25)
+
+.text-white-80
+	color: rgba(white, .8)
 
 @each $color in $color-config
 	.lay-color-#{nth($color, 1)}, 

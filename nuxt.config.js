@@ -47,6 +47,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    // { src: `~plugins/vimeo-player`, ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -62,6 +63,9 @@ export default {
   ** Build configuration
   */
   build: {
+    vendor: [
+      // 'vue-vimeo-player'
+    ],
     postcss: {
       preset: {
         features: {
@@ -70,7 +74,8 @@ export default {
       }
     },
     transpile: [
-      "gsap"
+      "gsap",
+      "three"
     ],
     /*
     ** You can extend webpack config here

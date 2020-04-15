@@ -35,10 +35,12 @@
           </div>
         </div>
       </div>
+      <!-- 
       <div id="effect-trigger"
       ref="refEffect"
       v-on:mousemove="handleMouseMove($event)"
-      v-on:mouseleave="handleMouseLeave($event)"></div>
+      v-on:mouseleave="handleMouseLeave($event)"></div> 
+      -->
     </div>
   </div>
 </template>

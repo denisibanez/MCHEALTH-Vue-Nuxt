@@ -26,10 +26,8 @@
                   </section>
                 </div>
               </div>
-              <div id="container-video">
-                <video id="video-human-body" tabindex="0" autobuffer="autobuffer" preload="preload">
-                  <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src="~assets/videos/1021199251-preview.mp4"></source>
-                </video>
+              <div id="container-video" ref="refThree">
+                <ThreeHumanBody :width="threeSizes.width" :height="threeSizes.height" />
                 <div id="hidden-frame">
                   <div class="helper--1"></div>
                   <div class="helper--2"></div>
@@ -69,37 +67,54 @@
 
 <script>
 import Banner from "../../layouts/vacinas/Banner";
+import ThreeHumanBody from "../../layouts/vacinas/ThreeHumanBody";
 
 export default {
   components: {
     Banner,
+    ThreeHumanBody,
   },
   data: function() {
     return {
-      
+      threeSizes: {
+        width: 1000,
+        height: 562,
+      },
+      videoCarouselData: [
+        {
+          index: 0,
+          enabled: false,
+          poster: "banner-poluicao.png",
+          videoUrl: "https://www.youtube.com/watch?v=eLeIJtLebZk",
+        },
+        {
+          index: 1,
+          enabled: false,
+          poster: "banner-poluicao.png",
+          videoUrl: "https://www.youtube.com/watch?v=eLeIJtLebZk",
+        },
+        {
+          index: 3,
+          enabled: false,
+          poster: "banner-poluicao.png",
+          videoUrl: "https://www.youtube.com/watch?v=eLeIJtLebZk",
+        }
+      ]
     }
   },
   head () {
     return {
-      title: "Estadão - RaioX | Vacinas"
+      title: "Estadão - Saúde&Ciência | Vacinas"
+    }
+  },
+  methods: {
+    updateCanvasSize: function () {
+      this.threeSizes.width = this.$refs.refThree.clientWidth;
+      this.threeSizes.height = this.$refs.refThree.clientHeight;
     }
   },
   mounted: function() {
-    // select video element
-    var vid = document.getElementById('video-human-body');
-
-    // pause video on load
-    vid.pause();
-    
-    // pause video on document scroll (stops autoplay once scroll started)
-    window.onscroll = function(){
-        vid.pause();
-    };
-
-    // refresh video frames on interval for smoother playback
-    setInterval(function(){
-        vid.currentTime = (window.pageYOffset / 80) - 6;
-    }, 40);
+    this.updateCanvasSize();
   },
   transition: {
     name: 'transition',
@@ -136,25 +151,15 @@ export default {
       z-index: 10
 
     #container-video
-      --width: 1500px
+      --width: 1000px
       --height: calc((var(--width) / 16) * 9)
       position: absolute
       top: 50%
       z-index: 5
-      margin-top: calc((var(--height) / 2) * -.6)
-      right: calc((var(--width) / 4) * -1)
+      margin-top: calc((var(--height) / 2) * -1)
+      right: calc((var(--width) / 7) * -1)
       width: var(--width)
       height: var(--height)
-      transform: rotate(30deg)
-
-      video
-        position: absolute
-        width: 100%
-        height: 100%
-        top: 0
-        left: 0
-        z-index: 5
-        // opacity: .5  
 
       #hidden-frame
         display: block
@@ -173,6 +178,7 @@ export default {
 
           &::after,
           &::before
+            opacity: .5
             position: absolute
             display: block
             content: " "
@@ -185,6 +191,7 @@ export default {
           &::before
             background: linear-gradient(0deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
           &::after
+            opacity: 1
             background: linear-gradient(180deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
 
         .helper--2

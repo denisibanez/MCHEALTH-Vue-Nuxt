@@ -1,7 +1,7 @@
 <template>
   <div>
     <Carousel :slideData="slideData" />
-    <Footer msg="A verdadeira doença é a desinformação, sed diam nonumy eirmod tempor." />
+    <Footer msg="Um novo olhar da informação, sed diam nonumy eirmod tempor." />
   </div>
 </template>
 
@@ -16,9 +16,9 @@ export default {
   },
   head () {
     return {
-      title: "Estadão - RaioX",
+      title: "Estadão - Saúde&Ciência",
       meta: [
-        { hid: 'description', name: 'description', content: 'A verdadeira doença é a desinformação' }
+        { hid: 'description', name: 'description', content: 'Um novo olhar da informação' }
       ]
     }
   },

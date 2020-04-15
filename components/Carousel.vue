@@ -142,6 +142,9 @@
       }
     }, 
     mounted() {
+      // Update Magnetic Cursor Anchors
+      this.$root.$emit('updateCursorListeners');
+
       this.setSliderPosition();
       const { cCarousel } = this.$refs;
 
