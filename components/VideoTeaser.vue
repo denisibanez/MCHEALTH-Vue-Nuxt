@@ -19,7 +19,7 @@
               <a href="#" 
               :title="videoData.button" 
               class="btn btn-default-transparent-button-arrow lay-color-black c-magnetic"
-              v-on:click="toggleTrailer()">
+              v-on:click="fullScreenTrailerOpen()">
                 {{ videoData.button }}
               </a>
             </div>
@@ -29,10 +29,21 @@
     </div>
     <div class="trailer-wrapper--out"
     ref="refTrailerWrapper">
-      <div class="trailer-wrapper" 
-      ref="refVimeoTrailerBox"></div>
+      <div class="trailer-wrapper"
+      :class="'videoplayer--' + vimeoTrailer.status + ' ' + 'mouse--' + vimeoTrailer.mouseStatus" 
+      ref="refVimeoTrailerBox">
+        <div class="videocontrol" v-on:click="toggleTrailer()">
+          <button class="c-magnetic">
+            <span class="container--helpers">
+              <span class="helper--1"></span>
+              <span class="helper--2"></span>
+              <span class="helper--3"></span>
+            </span>
+          </button>
+        </div>
+      </div>
       <div class="trailer-close-button c-magnetic is-cursor-hover" 
-      v-on:click="toggleTrailer()"
+      v-on:click="fullScreenTrailerClose()"
       ref="refTrailerBtnClose"></div>
     </div>
   </div>
@@ -67,6 +78,8 @@
           },
         },
         vimeoTrailer: {
+          status: 'paused',
+          mouseStatus: 'stoped',
           player: null,
           loaded: false,
           volume: 1,
@@ -95,80 +108,106 @@
         });
 
         this.vimeoTrailer.player.on('ended', () => {
-          this.toggleTrailer();
+          this.fullScreenTrailerClose();
         });
 
         this.vimeoTrailer.player.setColor('#ea9b1c');
       },
-      toggleTrailer: function () {
-        this.trailerFocus = !this.trailerFocus;
+      fullScreenTrailerOpen: function () {
+        this.trailerFocus = true;
         const { refTrailerWrapper, refTrailerBtnClose } = this.$refs;
 
-        if (this.trailerFocus) {
-          TweenLite.to(refTrailerWrapper, .3, { css: { display: 'block', opacity: 1} , ease: Power4.easeOut });
-          TweenLite.to(refTrailerBtnClose, .3, { css: { scale: 1 } , ease: Power4.easeOut, delay: .3 });
-          
-          this.vimeoTeaser.player.pause().then(() => {
-            this.vimeoTrailer.player.play().then(() => {
-              this.vimeoTeaser.loaded = false;
-            });          
+        TweenLite.to(refTrailerWrapper, .3, { css: { display: 'block', opacity: 1} , ease: Power4.easeOut });
+        TweenLite.to(refTrailerBtnClose, .3, { css: { display: 'block', scale: 1 } , ease: Power4.easeOut, delay: .3 });
+        
+        this.playTrailer();
+      },
+      fullScreenTrailerClose: function() {
+        this.trailerFocus = false;
+        const { refTrailerWrapper, refTrailerBtnClose } = this.$refs;
+
+        TweenLite.to(refTrailerWrapper, .3, { css: { opacity: 0, display: 'none' } , ease: Power4.easeOut });
+        TweenLite.to(refTrailerBtnClose, .3, { css: { scale: 0, display: 'none' } , ease: Power4.easeOut });
+        
+        this.pauseTrailer();
+      },
+      toggleTrailer: function () { 
+        if (this.vimeoTrailer.status === 'played') {
+          this.vimeoTrailer.player.pause().then(() => {
+            this.vimeoTrailer.status = 'paused';
           });
+        } else if (this.vimeoTrailer.status === 'paused') {
+          this.vimeoTrailer.status = 'loading';
 
-          let counter = 1;
-          let loop = 5;
-          let volumeSlice = this.vimeoTrailer.volume / loop;
-          let myVolume = 0;
-          
-          let interval = setInterval(() => {
-            myVolume += volumeSlice;
-
-            if (myVolume < 0) {
-              myVolume = 0;
-            } else if (myVolume > 1) {
-              myVolume = 1;
-            }
-
-            this.vimeoTrailer.player.setVolume(myVolume);
-
-            if (counter == loop) {
-              clearInterval(interval);
-            }
-            counter++;
-          }, 300);
-        } else {
-          TweenLite.to(refTrailerWrapper, .3, { css: { opacity: 0 } , ease: Power4.easeOut });
-          TweenLite.to(refTrailerBtnClose, .3, { css: { scale: 0 } , ease: Power4.easeOut });
-          
-          let counter = 1;
-          let loop = 5;
-          let volumeSlice = this.vimeoTrailer.volume / loop;
-          let myVolume = this.vimeoTrailer.volume;
-          
-          let interval = setInterval(() => {
-            myVolume -= volumeSlice;
-
-            if (myVolume < 0) {
-              myVolume = 0;
-            } else if (myVolume > 1) {
-              myVolume = 1;
-            }
-
-            this.vimeoTrailer.player.setVolume(myVolume);
-
-            if (counter == loop) {
-              clearInterval(interval);
-              
-              TweenLite.to(refTrailerWrapper, .1, { css: { display: 'none'} , ease: Power4.easeOut });
-                          
-              this.vimeoTrailer.player.pause().then(() => {
-                this.vimeoTeaser.loaded = true;
-                this.vimeoTeaser.player.play();
-              });
-            }
-            counter++;
-          }, 200);
+          this.vimeoTrailer.player.play().then(() => {
+            this.vimeoTrailer.status = 'played';
+          });
         }
       },
+      playTrailer: function () {
+        this.vimeoTrailer.status = 'loading';
+
+        this.vimeoTeaser.player.pause().then(() => {
+          this.vimeoTrailer.player.play().then(() => {
+            this.vimeoTeaser.loaded = false;
+            this.vimeoTrailer.status = "played";
+          });          
+        });
+
+        let counter = 1;
+        let loop = 5;
+        let volumeSlice = this.vimeoTrailer.volume / loop;
+        let myVolume = 0;
+        
+        let interval = setInterval(() => {
+          myVolume += volumeSlice;
+
+          if (myVolume < 0) {
+            myVolume = 0;
+          } else if (myVolume > 1) {
+            myVolume = 1;
+          }
+
+          this.vimeoTrailer.player.setVolume(myVolume);
+
+          if (counter == loop) {
+            clearInterval(interval);
+          }
+          counter++;
+        }, 300);
+      },
+      pauseTrailer: function () {
+        this.vimeoTrailer.status = "paused";
+        
+        let counter = 1;
+        let loop = 5;
+        let volumeSlice = this.vimeoTrailer.volume / loop;
+        let myVolume = this.vimeoTrailer.volume;
+        
+        let interval = setInterval(() => {
+          myVolume -= volumeSlice;
+
+          if (myVolume < 0) {
+            myVolume = 0;
+          } else if (myVolume > 1) {
+            myVolume = 1;
+          }
+
+          this.vimeoTrailer.player.setVolume(myVolume);
+
+          if (counter == loop) {
+            clearInterval(interval);
+            
+            TweenLite.to(refTrailerWrapper, .1, { css: { display: 'none'} , ease: Power4.easeOut });
+                        
+            this.vimeoTrailer.player.pause().then(() => {
+              this.vimeoTeaser.loaded = true;
+              this.vimeoTeaser.player.play();
+            });
+          }
+          counter++;
+        }, 200);
+      }
     }, 
     mounted() {
       // Update Magnetic Cursor Anchors
@@ -188,6 +227,26 @@
       const { refOverlay } = this.$refs;
       TweenLite.from(refOverlay, .5, { autoAlpha: 0, x: "-=30", ease: Power4.easeOut }).delay(.5);
 
+      const { refVimeoTrailerBox } = this.$refs;
+
+      let moveTimer;
+
+      refVimeoTrailerBox.addEventListener("mouseout", () => {
+        this.vimeoTrailer.mouseStatus = 'stoped';
+
+        clearTimeout(moveTimer);
+      });
+
+      refVimeoTrailerBox.addEventListener("mousemove", () => {
+        clearTimeout(moveTimer);
+
+        moveTimer = setTimeout(() => {
+          this.vimeoTrailer.mouseStatus = 'stoped';
+          document.querySelector('html').classList.add('hide-cursor');
+        }, 2000);
+
+        this.vimeoTrailer.mouseStatus = 'moving';
+      });
     }
   }
 </script>
@@ -341,7 +400,7 @@
         height: 100%
         top: 0
         left: 0
-        /deep/ div
+        /deep/ div:last-of-type
           position: initial !important
 
       .trailer-close-button
@@ -378,8 +437,6 @@
           &::before
             transform: rotate(90deg) scale(.9)
 
-
-
   .font-size-title
     font-size: 140px
     line-height: 1
@@ -387,7 +444,121 @@
   .font-size-subtitle
     font-size: 40px
 
+  [class*='videoplayer--']
+    position: relative !important
+    .videocontrol
+      display: flex
+      justify-content: center
+      align-items: center
+      position: absolute !important
+      width: 100%
+      height: 100%
+      z-index: 5
+      button
+        position: relative
+        display: block
+        content: " "
+        width: 15%
+        padding-bottom: 15%
+        border: 3px solid #FFF
+        border-radius: 50% 
+        background-color: transparent
+        outline: 0
+        transition: all .2s ease-out
+        opacity: 1
+        .container--helpers
+          display: block
+          position: absolute
+          width: 100%
+          height: 100%
+          top: 0
+          left: 0
+          transform: rotate(0deg)
+          transition: all .3s ease-out
+          [class*='helper--']
+            display: block
+            width: 3px
+            height: 50% 
+            position: absolute
+            background-color: #FFFFFF
+            left: 50%
+            margin-left: -1px
+            top: 25%
+            transition: all .2s ease-out
+            border-radius: 3px
+      &::focus
+        box-shadow: none
+        outline: 0
+    &[class*='--played']
+      .videocontrol
+        button 
+          .container--helpers
+            .helper--1
+              left: 40%
+            .helper--2
+              left: 60%
+            .helper--3
+              left: 60%
+      &.mouse--stoped
+        button 
+          opacity: 0
+    &[class*='--paused']
+      .videocontrol
+        button 
+          .container--helpers
+            .helper--1
+              left: 30%
+            .helper--2
+              left: 30%
+              transform-origin: top
+              transform: rotate(-60deg)
+            .helper--3
+              left: 30%
+              transform-origin: bottom
+              transform: rotate(60deg)
+    &[class*='--loading']
+      .videocontrol
+        button 
+          .container--helpers
+            animation: rotating 2s linear infinite
+            .helper--1
+              width: 20px
+              height: 20px
+              border-radius: 20px
+              left: -11px
+              top: calc(50% - 10px)
+            .helper--2
+              width: 20px
+              height: 20px
+              border-radius: 20px
+              left: calc(100% - 7px)
+              top: calc(50% - 10px)
+              transform-origin: top
+              transform: rotate(0deg)
+            .helper--3
+              width: 20px
+              height: 20px
+              border-radius: 20px
+              left: -11px
+              top: calc(50% - 10px)
+              transform-origin: top
+              transform: rotate(0deg)
+              opacity: 0
 
+  @keyframes rotating
+    from
+      -ms-transform: rotate(0deg)
+      -moz-transform: rotate(0deg)
+      -webkit-transform: rotate(0deg)
+      -o-transform: rotate(0deg)
+      transform: rotate(0deg)
+    
+    to
+      -ms-transform: rotate(360deg)
+      -moz-transform: rotate(360deg)
+      -webkit-transform: rotate(360deg)
+      -o-transform: rotate(360deg)
+      transform: rotate(360deg)
 
   @include media-breakpoint-down(lg)
     .font-size-title

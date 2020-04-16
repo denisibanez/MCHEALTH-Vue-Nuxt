@@ -36,6 +36,11 @@
     .is-hover &
       .point
         transform: scale(2)
+    .hide-cursor:not(.is-hover) &
+      .point
+        transform: scale(0)
+        opacity: 0
+
   .c-cursor__pointer__dot
     height: rem(8)
     left: rem(-4)
@@ -59,6 +64,10 @@
     .is-hover &
       .point
         // transform: scale(0)
+    .hide-cursor:not(.is-hover) &
+      .point
+        transform: scale(0)
+        opacity: 0
 
 .c-magnetic
   span
