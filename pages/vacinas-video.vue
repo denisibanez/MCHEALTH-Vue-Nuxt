@@ -43,14 +43,21 @@ export default {
   @import '~bootstrap/scss/mixins'
 
   .c-vacinas-video
-    position: absolute
     top: 0
     left: 0
-    align-items: center
-    display: flex
-    height: 100%
-    justify-content: center
-    overflow: hidden
+    height: 100vh
     width: 100%
+    margin-top: -90px
+
+  @include media-breakpoint-down(lg)
+
+  @include media-breakpoint-down(md)
+
+  @include media-breakpoint-down(sm)
+
+  @include media-breakpoint-down(xs)
+    .c-vacinas-video
+      margin-top: -80px
+
 </style>
 

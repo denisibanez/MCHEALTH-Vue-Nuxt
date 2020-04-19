@@ -12,16 +12,16 @@
       <div class="overlay-content">
         <div class="container h-100">
           <div class="row h-100 align-items-center  justify-content-center justify-content-md-start">
-            <div class="col-md-5 col-10 text-center text-md-left py-4" ref="refOverlay">
+            <div class="col-md-5 col-10 text-center text-md-left py-4 px-0 px-sm-3" id="ref-overlay" ref="refOverlay">
               <h1 class="lay-color-orange font-size-title">{{videoData.title}}</h1>
               <h2 class="font-flama font-size-subtitle font-weight-normal text-shadow-01 mb-3">{{videoData.subtitle}}</h2>
               <p class="text-white-80 text-shadow-01">{{videoData.description}}</p>
-              <a href="#" 
+              <button 
               :title="videoData.button" 
               class="btn btn-default-transparent-button-arrow lay-color-black c-magnetic"
               v-on:click="fullScreenTrailerOpen()">
                 {{ videoData.button }}
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -81,7 +81,6 @@
           status: 'paused',
           mouseStatus: 'stoped',
           player: null,
-          loaded: false,
           volume: 1,
           options: {
             url: null,
@@ -102,16 +101,27 @@
       },
       installVimeoTrailer: function () {
         this.vimeoTrailer.player = new Player(this.$refs.refVimeoTrailerBox , this.vimeoTrailer.options);
-
-        this.vimeoTrailer.player.on('bufferend', () => {
-          this.vimeoTrailer.loaded = true;
-        });
+        this.vimeoTrailer.player.setColor('#ea9b1c');
 
         this.vimeoTrailer.player.on('ended', () => {
           this.fullScreenTrailerClose();
         });
 
-        this.vimeoTrailer.player.setColor('#ea9b1c');
+        this.vimeoTrailer.player.on('bufferstart', () => {
+          this.vimeoTrailer.status = 'loading';
+        });
+
+        this.vimeoTrailer.player.on('bufferend', () => {
+          this.vimeoTrailer.status = 'played';
+        });
+
+        this.vimeoTrailer.player.on('play', () => {
+          this.vimeoTrailer.status = 'played';
+        });
+
+        this.vimeoTrailer.player.on('pause', () => {
+          this.vimeoTrailer.status = 'paused';
+        });
       },
       fullScreenTrailerOpen: function () {
         this.trailerFocus = true;
@@ -133,83 +143,31 @@
       },
       toggleTrailer: function () { 
         if (this.vimeoTrailer.status === 'played') {
-          this.vimeoTrailer.player.pause().then(() => {
-            this.vimeoTrailer.status = 'paused';
-          });
+          this.vimeoTrailer.player.pause();
         } else if (this.vimeoTrailer.status === 'paused') {
-          this.vimeoTrailer.status = 'loading';
-
-          this.vimeoTrailer.player.play().then(() => {
-            this.vimeoTrailer.status = 'played';
-          });
+          this.vimeoTrailer.player.play();
         }
       },
       playTrailer: function () {
         this.vimeoTrailer.status = 'loading';
 
         this.vimeoTeaser.player.pause().then(() => {
-          this.vimeoTrailer.player.play().then(() => {
-            this.vimeoTeaser.loaded = false;
-            this.vimeoTrailer.status = "played";
-          });          
+          this.vimeoTrailer.player.play();          
         });
-
-        let counter = 1;
-        let loop = 5;
-        let volumeSlice = this.vimeoTrailer.volume / loop;
-        let myVolume = 0;
-        
-        let interval = setInterval(() => {
-          myVolume += volumeSlice;
-
-          if (myVolume < 0) {
-            myVolume = 0;
-          } else if (myVolume > 1) {
-            myVolume = 1;
-          }
-
-          this.vimeoTrailer.player.setVolume(myVolume);
-
-          if (counter == loop) {
-            clearInterval(interval);
-          }
-          counter++;
-        }, 300);
       },
-      pauseTrailer: function () {
-        this.vimeoTrailer.status = "paused";
-        
-        let counter = 1;
-        let loop = 5;
-        let volumeSlice = this.vimeoTrailer.volume / loop;
-        let myVolume = this.vimeoTrailer.volume;
-        
-        let interval = setInterval(() => {
-          myVolume -= volumeSlice;
-
-          if (myVolume < 0) {
-            myVolume = 0;
-          } else if (myVolume > 1) {
-            myVolume = 1;
-          }
-
-          this.vimeoTrailer.player.setVolume(myVolume);
-
-          if (counter == loop) {
-            clearInterval(interval);
-            
-            TweenLite.to(refTrailerWrapper, .1, { css: { display: 'none'} , ease: Power4.easeOut });
-                        
-            this.vimeoTrailer.player.pause().then(() => {
-              this.vimeoTeaser.loaded = true;
-              this.vimeoTeaser.player.play();
-            });
-          }
-          counter++;
-        }, 200);
+      pauseTrailer: function () {        
+        this.vimeoTeaser.loaded = false;
+        this.vimeoTrailer.player.pause().then(() => {
+          this.vimeoTeaser.loaded = true;
+          this.vimeoTeaser.player.play();
+        });
       }
     }, 
     mounted() {
+      const { refOverlay } = this.$refs;
+      const { refVimeoTrailerBox } = this.$refs;
+      let moveTimer;
+      
       // Update Magnetic Cursor Anchors
       this.$root.$emit('updateCursorListeners');
       
@@ -224,12 +182,7 @@
       this.vimeoTrailer.options.url = 'https://vimeo.com/' + this.videoData.idVideoTrailer;
       this.installVimeoTrailer();
 
-      const { refOverlay } = this.$refs;
-      TweenLite.from(refOverlay, .5, { autoAlpha: 0, x: "-=30", ease: Power4.easeOut }).delay(.5);
-
-      const { refVimeoTrailerBox } = this.$refs;
-
-      let moveTimer;
+      TweenLite.to(refOverlay, .5, { autoAlpha: 1, x: 0 }).delay(.5);
 
       refVimeoTrailerBox.addEventListener("mouseout", () => {
         this.vimeoTrailer.mouseStatus = 'stoped';
@@ -257,23 +210,18 @@
   @import '~bootstrap/scss/mixins'
 
   .c-video-teaser
-    position: absolute
     top: 0
     left: 0
-    align-items: center
-    display: flex
     height: 100%
-    justify-content: center
-    overflow: hidden
     width: 100%
+    overflow: hidden
 
     .presentation-wrapper--out
-      position: absolute
+      position: relative
       width: 100%
       height: 100%
       top: 0
       left: 0
-      overflow: hidden
       z-index: 1
       background-position: center center
       background-size: cover
@@ -293,7 +241,6 @@
         left: 0
         pointer-events: none
         overflow: hidden
-        z-index: 1
         background-position: center center
         background-size: cover
 
@@ -373,16 +320,32 @@
 
       .overlay-content
         z-index: 3
-        position: absolute
+        position: relative
         width: 100%
         height: 100%
         top: 0
         left: 0
+        padding-top: 90px
+        overflow: scroll
+        &::before
+          position: fixed
+          display: block
+          content: " "
+          opacity: 1
+          background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)
+          width: 100%
+          height: 90px
+          left: 0
+          top: 0
+          z-index: 1
+        #ref-overlay
+          opacity: 0
+          transform: translateX(-30px)
 
     .trailer-wrapper--out
       position: absolute
       width: 100%
-      height: 100%
+      height: 100vh
       top: 0
       left: 0
       overflow: hidden
@@ -439,7 +402,7 @@
 
   .font-size-title
     font-size: 140px
-    line-height: 1
+    line-height: .8
 
   .font-size-subtitle
     font-size: 40px
@@ -562,14 +525,14 @@
 
   @include media-breakpoint-down(lg)
     .font-size-title
-      font-size: 130px
+      font-size: 110px
 
     .font-size-subtitle
       // font-size: 40px
 
   @include media-breakpoint-down(md)
     .font-size-title
-      font-size: 120px
+      font-size: 100px
 
     .font-size-subtitle
       font-size: 35px
@@ -588,8 +551,11 @@
     .font-size-subtitle
       font-size: 25px
 
-  #hidden-frame 
-    .helper--2
-      &::before
-        opacity: 0
+      .overlay-content
+        padding-top: 80px
+
+    #hidden-frame 
+      .helper--2
+        &::before
+          opacity: 0
 </style>
