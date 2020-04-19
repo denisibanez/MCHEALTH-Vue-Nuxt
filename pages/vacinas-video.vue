@@ -27,7 +27,7 @@ export default {
         title: 'VACINAS',
         subtitle: 'POR QUE AINDA EXISTEM PESSOAS QUE SÃO CONTRA?',
         description: "Enquanto não há vacina contra pragas digitais, nos resta explicar os diversos aspectos sobre as vacinas e derrubar todos os mitos que rodeiam o tema.",
-        button: "Assista",
+        button: "Assista agora",
         imgCover: "vacinas/video-teaser-poster.jpg",
         idVideoTeaser: "407726309/64dae15afb",
         idVideoTrailer: "407983251/b49f27b667",
@@ -40,6 +40,7 @@ export default {
 <style lang="sass">
   @import '~bootstrap/scss/functions'
   @import '~bootstrap/scss/variables'
+  @import '~assets/sass/basics/bootstrap-override'
   @import '~bootstrap/scss/mixins'
 
   .c-vacinas-video
@@ -48,6 +49,7 @@ export default {
     height: 100vh
     width: 100%
     margin-top: -90px
+    
 
   @include media-breakpoint-down(lg)
 

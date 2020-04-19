@@ -9,11 +9,9 @@
   import gsap from "gsap";
   import TweenMax from "gsap";
   import TweenLite from "gsap";
-  import Power2 from "gsap";
-  import Power4 from "gsap";
   
   if (process.client) {
-    gsap.registerPlugin(TweenMax, TweenLite, Power2, Power4); 
+    gsap.registerPlugin(TweenMax, TweenLite); 
   }
 
   export default {
@@ -53,15 +51,15 @@
         this.helpers.mousePosX = event.clientX;
         this.helpers.mousePosY = event.clientY;
         
-        if (event.target.classList.contains('c-magnetic')) return;
+        if (event.target.classList.contains('c-magnetic') && this.canEnableMagnetic()) return;
 
-        TweenLite.to(this.helpers.cursor, 0.3, { x: this.helpers.mousePosX, y: this.helpers.mousePosY, ease: Power4.easeOut });
+        TweenLite.to(this.helpers.cursor, 0.3, { x: this.helpers.mousePosX, y: this.helpers.mousePosY });
         TweenLite.to(this.helpers.cursor_dot, 0.1, { x: this.helpers.mousePosX, y: this.helpers.mousePosY });
 
         document.querySelector('html').classList.remove('hide-cursor');
       },
       mouseCursorEnter: function () {
-        TweenLite.to([this.helpers.cursor, this.helpers.cursor_dot], { autoAlpha: 1, ease: Power4.easeOut });
+        TweenLite.to([this.helpers.cursor, this.helpers.cursor_dot], { autoAlpha: 1 });
       },
       mouseCursorHandleMousePos: function () {
         this.helpers.page.addEventListener('mouseenter', this.mouseCursorEnter);
@@ -134,53 +132,78 @@
 
         TweenMax.to(span, 0.3, {
           x: (relX - boundingRect.width / 2) / boundingRect.width * force,
-          y: (relY - boundingRect.height / 2) / boundingRect.height * force,
-          ease: Power2.easeOut
+          y: (relY - boundingRect.height / 2) / boundingRect.height * force
         });
       },
       magneticCursorRender: function () {
         this.magneticCursorActivate();
       },
       // Helpers
-      isMobile: function () {
-        const ua = window.navigator.userAgent;
+      canEnableMouse: function () {
+        const ua = window.navigator.userAgent.toLowerCase();
 
-        if (ua.indexOf('iPad') > -1) {
+        if (ua.indexOf('ipad') > -1 || 
+        ua.indexOf('msie ') > -1 || 
+        !!ua.match(/trident.*rv\:11\./) ||
+        ua.match(/android/) ||
+        ua.match(/webos/) ||
+        ua.match(/iphone/) ||
+        ua.match(/ipad/) ||
+        ua.match(/ipod/) ||
+        ua.match(/blackberry/) ||
+        ua.match(/windows phone/) ||
+        ua.match(/playbook/) ||
+        ua.match(/silk/)) {
+          document.querySelector('body').classList.add('cursor--disabled');
+          return false;
+        } else if (ua.indexOf('Macintosh') > -1) {
+          try {
+              document.createEvent("TouchEvent");
+              document.querySelector('body').classList.add('cursor--disabled');
+              return false;
+          } catch (e) {
             return true;
+          }
+        } else {
+          return true;   
         }
-        if (ua.indexOf('Macintosh') > -1) {
-            try {
-                document.createEvent("TouchEvent");
-                return true;
-            } catch (e) {}
+      },
+      canEnableMagnetic: function () {
+        const ua = window.navigator.userAgent.toLowerCase();
+        
+        if (ua.indexOf('ipad') > -1 ||
+        ua.indexOf('msie ') > -1 || 
+        !!ua.match(/trident.*rv\:11\./) ||
+        ua.match(/android/) ||
+        ua.match(/webos/) ||
+        ua.match(/iphone/) ||
+        ua.match(/ipad/) ||
+        ua.match(/ipod/) ||
+        ua.match(/blackberry/) ||
+        ua.match(/windows phone/) ||
+        ua.match(/playbook/) ||
+        ua.match(/silk/)) {
+          return false;
+        } else if (ua.indexOf('safari') > -1) {
+          if (ua.indexOf('chrome') > -1) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;   
         }
-
-        const toMatch = [
-            /Android/i,
-            /webOS/i,
-            /iPhone/i,
-            /iPad/i,
-            /iPod/i,
-            /BlackBerry/i,
-            /Windows Phone/i,
-            /android/i,
-            /ipad/i,
-            /playbook/i,
-            /silk/i,
-        ];
-
-        return toMatch.some((toMatchItem) => {
-            return ua.match(toMatchItem);
-        });
       },
     },
     mounted() {
-      if (!this.isMobile()) {
+      if (this.canEnableMouse()) {
         this.mouseCursorConstructor();
         this.mouseCursorRender();
 
-        this.magneticCursorConstructor();
-        this.magneticCursorRender();
+        if (this.canEnableMagnetic()) {
+          this.magneticCursorConstructor();
+          this.magneticCursorRender();
+        }
 
         this.$root.$on('updateCursorListeners', () => {
           this.helpers.links.map(link => {
@@ -191,8 +214,10 @@
           this.mouseCursorConstructor();
           this.mouseCursorRender();
 
-          this.magneticCursorConstructor();
-          this.magneticCursorRender();
+          if (this.canEnableMagnetic()) {
+            this.magneticCursorConstructor();
+            this.magneticCursorRender();
+          }
         });
       }
     },

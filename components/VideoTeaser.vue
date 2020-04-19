@@ -207,6 +207,7 @@
 <style lang="sass" scoped>
   @import '~bootstrap/scss/functions'
   @import '~bootstrap/scss/variables'
+  @import '~assets/sass/basics/bootstrap-override'
   @import '~bootstrap/scss/mixins'
 
   .c-video-teaser
@@ -326,7 +327,7 @@
         top: 0
         left: 0
         padding-top: 90px
-        overflow: scroll
+        overflow-y: scroll
         &::before
           position: fixed
           display: block
@@ -525,21 +526,21 @@
 
   @include media-breakpoint-down(lg)
     .font-size-title
-      font-size: 110px
+      font-size: 90px
 
     .font-size-subtitle
       // font-size: 40px
 
   @include media-breakpoint-down(md)
     .font-size-title
-      font-size: 100px
+      font-size: 80px
 
     .font-size-subtitle
       font-size: 35px
 
   @include media-breakpoint-down(sm)
     .font-size-title
-      font-size: 90px
+      font-size: 70px
 
     .font-size-subtitle
       font-size: 30px

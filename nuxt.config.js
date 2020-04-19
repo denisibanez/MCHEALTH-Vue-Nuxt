@@ -64,7 +64,8 @@ export default {
   */
   build: {
     vendor: [
-      // 'vue-vimeo-player'
+      // 'vue-vimeo-player',
+      // 'vue-style-loader',
     ],
     postcss: {
       preset: {

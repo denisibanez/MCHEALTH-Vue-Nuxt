@@ -32,6 +32,7 @@
 <style lang="sass" scoped>
   @import '~bootstrap/scss/functions'
   @import '~bootstrap/scss/variables'
+  @import '~assets/sass/basics/bootstrap-override'
   @import '~bootstrap/scss/mixins'
 
   .c-footer 

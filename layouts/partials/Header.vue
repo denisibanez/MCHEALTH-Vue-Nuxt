@@ -30,10 +30,9 @@
 <script>
   import gsap from "gsap";
   import TweenLite from "gsap";
-  import Power4 from "gsap";
 
   if (process.client) {
-    gsap.registerPlugin(TweenLite, Power4);
+    gsap.registerPlugin(TweenLite);
   }
 
   export default {
@@ -53,7 +52,7 @@
     }, 
     mounted: function() {
       const { cHeader } = this.$refs;
-      TweenLite.from(cHeader, .5, { autoAlpha: 0, ease: Power4.easeOut }).delay(.5)
+      TweenLite.to(cHeader, .5, { autoAlpha: 1 }).delay(.5)
     }
   }
 </script>
@@ -61,12 +60,14 @@
 <style lang="sass" scoped>
   @import '~bootstrap/scss/functions'
   @import '~bootstrap/scss/variables'
+  @import '~assets/sass/basics/bootstrap-override'
   @import '~bootstrap/scss/mixins'
 
   .c-header 
     width: 100%
     position: relative
     z-index: 5
+    opacity: 0
     .row
       height: 90px 
   .header-logo 
