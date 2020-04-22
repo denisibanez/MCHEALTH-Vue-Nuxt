@@ -37,28 +37,7 @@
           </div>
         </div>
         <div class="col-12">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quam iusto, tempore, repudiandae velit itaque harum incidunt exercitationem veritatis eligendi eius laboriosam inventore officia repellendus id laudantium minus deserunt ipsa.
+          <Game />
         </div>
       </div>
     </div>
@@ -68,11 +47,13 @@
 <script>
 import Banner from "../../layouts/vacinas/Banner";
 import ThreeHumanBody from "../../layouts/vacinas/ThreeHumanBody";
+import Game from "../../layouts/vacinas/Game";
 
 export default {
   components: {
     Banner,
     ThreeHumanBody,
+    Game,
   },
   data: function() {
     return {

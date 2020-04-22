@@ -29,13 +29,11 @@
       left: 0
       top: 0
       border: 1px solid
-      // border-color: map-get($color-config, "orange")
-      border-color: #efefef
+      border-color: map-get($color-config, "orange")
       border-radius: 50%
       transition: all 1s cubic-bezier(0.165, 0.840, 0.440, 1.000)
     .is-hover &
       .point
-        // border-color: map-get($color-config, "orange")
         transform: scale(2)
     .hide-cursor:not(.is-hover) &
       .point
@@ -59,13 +57,9 @@
       height: 100%
       left: 0
       top: 0
-      // background-color: map-get($color-config, "orange")
-      background-color: #efefef
+      background-color: map-get($color-config, "orange")
       border-radius: 50%
       transition: all 0.3s cubic-bezier(0.165, 0.840, 0.440, 1.000)
-    .is-hover &
-      .point
-        // background-color: map-get($color-config, "orange")
     .hide-cursor:not(.is-hover) &
       .point
         transform: scale(0)
