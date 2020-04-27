@@ -34,6 +34,7 @@
   @import '~bootstrap/scss/variables'
   @import '~assets/sass/basics/bootstrap-override'
   @import '~bootstrap/scss/mixins'
+  @import '~assets/sass/variables'
 
   .c-footer 
     width: 100%

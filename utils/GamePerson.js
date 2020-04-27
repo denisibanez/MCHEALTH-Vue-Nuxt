@@ -1,4 +1,5 @@
 import Vec2 from "./Vec2";
+import { Howl, Howler } from 'howler';
 
 export default class Person {
   constructor(x, y, disease, status, distances, diseaseArms, radius) {
@@ -32,6 +33,8 @@ export default class Person {
     this.surroundPeople = null;
     this.radius = radius;
     this.shieldSize = 6;
+    this.maxDistanceX = this.distances.x - this.radius - this.shieldSize;
+    this.maxDistanceY = this.distances.y - this.radius - this.shieldSize;
 
     if (this.status === 3) {
       this.calcDiagonalWaypoints();
@@ -46,7 +49,10 @@ export default class Person {
       sickTransp:   "rgba(225, 87, 64, 0.2)",
       bg:           "#2e3337",
       diseaseArms:  "#de3533"
-    }    
+    }
+
+    this.soundInfected =  new Howl({ src: ['/sounds/vacinas/game-infected2.mp3'] });
+
   }
 
   calcDiagonalWaypoints() {
@@ -160,24 +166,29 @@ export default class Person {
 
   draw(ctx) {
     ctx.lineCap = "round";
+    ctx.lineWidth = 2;
 
     if (this.status === 3) {
       // DiseaseArm Right
       if (this.diseaseArms.right.enabled) {
-        if (this.diseaseArms.right.size < (this.distances.x - this.radius - this.shieldSize)) {
+        if (this.diseaseArms.right.size < this.maxDistanceX) {
           ctx.beginPath();
-          ctx.moveTo(this.center.x, this.center.y);
-          ctx.lineTo(this.center.x + this.diseaseArms.right.size, this.center.y);
-          ctx.lineWidth = 2;
+          ctx.moveTo(
+            this.center.x, 
+            this.center.y
+          );
+          ctx.lineTo(
+            this.center.x + Math.floor(this.diseaseArms.right.size), 
+            this.center.y
+          );
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
-          this.diseaseArms.right.size = this.diseaseArms.right.size + (this.diseaseSpeed.right / 15);
+          this.diseaseArms.right.size += (this.maxDistanceX / this.diseaseSpeed.right);
         } else {
           ctx.beginPath();
           ctx.moveTo(this.center.x, this.center.y);
           ctx.lineTo(this.center.x + this.diseaseArms.right.size, this.center.y);
-          ctx.lineWidth = 2;
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
@@ -190,20 +201,24 @@ export default class Person {
 
       // DiseaseArm Left  
       if (this.diseaseArms.left.enabled) {
-        if (this.diseaseArms.left.size < (this.distances.x - this.radius - this.shieldSize)) {
+        if (this.diseaseArms.left.size < this.maxDistanceX) {
           ctx.beginPath();
-          ctx.moveTo(this.center.x, this.center.y);
-          ctx.lineTo(this.center.x - this.diseaseArms.left.size, this.center.y);
-          ctx.lineWidth = 2;
+          ctx.moveTo(
+            this.center.x, 
+            this.center.y
+          );
+          ctx.lineTo(
+            this.center.x - Math.floor(this.diseaseArms.left.size), 
+            this.center.y
+          );
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
-          this.diseaseArms.left.size = this.diseaseArms.left.size + (this.diseaseSpeed.left / 15);
+          this.diseaseArms.left.size += (this.maxDistanceX / this.diseaseSpeed.left);
         } else {
           ctx.beginPath();
           ctx.moveTo(this.center.x, this.center.y);
           ctx.lineTo(this.center.x - this.diseaseArms.left.size, this.center.y);
-          ctx.lineWidth = 2;
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
          
@@ -216,20 +231,24 @@ export default class Person {
 
       // DiseaseArm Top  
       if (this.diseaseArms.top.enabled) {
-        if (this.diseaseArms.top.size < (this.distances.y - this.radius - this.shieldSize)) {
+        if (this.diseaseArms.top.size < this.maxDistanceY) {
           ctx.beginPath();
-          ctx.moveTo(this.center.x, this.center.y);
-          ctx.lineTo(this.center.x, this.center.y - this.diseaseArms.top.size);
-          ctx.lineWidth = 2;
+          ctx.moveTo(
+            this.center.x, 
+            this.center.y
+          );
+          ctx.lineTo(
+            this.center.x, 
+            this.center.y - Math.floor(this.diseaseArms.top.size)
+          );
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
-          this.diseaseArms.top.size = this.diseaseArms.top.size + (this.diseaseSpeed.top / 15);
+          this.diseaseArms.top.size += (this.maxDistanceY / this.diseaseSpeed.top);
         } else {
           ctx.beginPath();
           ctx.moveTo(this.center.x, this.center.y);
-          ctx.lineTo(this.center.x, this.center.y - this.diseaseArms.top.size);
-          ctx.lineWidth = 2;
+          ctx.lineTo(this.center.x, this.center.y - this.maxDistanceY);
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
@@ -242,20 +261,24 @@ export default class Person {
 
       // DiseaseArm Bottom  
       if (this.diseaseArms.bottom.enabled) {
-        if (this.diseaseArms.bottom.size < (this.distances.y - this.radius - this.shieldSize)) {
+        if (this.diseaseArms.bottom.size < this.maxDistanceY) {
           ctx.beginPath();
-          ctx.moveTo(this.center.x, this.center.y);
-          ctx.lineTo(this.center.x, this.center.y + this.diseaseArms.bottom.size);
-          ctx.lineWidth = 2;
+          ctx.moveTo(
+            this.center.x, 
+            this.center.y
+          );
+          ctx.lineTo(
+            this.center.x, 
+            this.center.y + Math.floor(this.diseaseArms.bottom.size)
+          );
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
-          this.diseaseArms.bottom.size = this.diseaseArms.bottom.size + (this.diseaseSpeed.bottom / 15);
+          this.diseaseArms.bottom.size += (this.maxDistanceY / this.diseaseSpeed.bottom);
         } else {
           ctx.beginPath();
           ctx.moveTo(this.center.x, this.center.y);
-          ctx.lineTo(this.center.x, this.center.y + this.diseaseArms.bottom.size);
-          ctx.lineWidth = 2;
+          ctx.lineTo(this.center.x, this.center.y + this.maxDistanceY);
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
@@ -269,26 +292,19 @@ export default class Person {
       // DiseaseArm Top-Right  
       if (this.diseaseArms.topRight.enabled) {
         if (this.waypoints.toTopRight.step < 99) {
-          if (this.diseaseArms.topRight.size % this.diseaseSpeed.topRight === 1) {
-            ctx.beginPath();
-            ctx.moveTo(this.waypoints.toTopRight.points[0].x, this.waypoints.toTopRight.points[0].y);
-            ctx.lineTo(this.waypoints.toTopRight.points[this.waypoints.toTopRight.step].x, this.waypoints.toTopRight.points[this.waypoints.toTopRight.step].y);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = this.colors.diseaseArms;
-            ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(
+            this.waypoints.toTopRight.points[0].x, 
+            this.waypoints.toTopRight.points[0].y
+          );
+          ctx.lineTo(
+            this.waypoints.toTopRight.points[Math.floor(this.waypoints.toTopRight.step)].x, 
+            this.waypoints.toTopRight.points[Math.floor(this.waypoints.toTopRight.step)].y
+          );
+          ctx.strokeStyle = this.colors.diseaseArms;
+          ctx.stroke();
 
-            this.waypoints.toTopRight.step++;
-          } else {
-            ctx.beginPath();
-            ctx.moveTo(this.waypoints.toTopRight.points[0].x, this.waypoints.toTopRight.points[0].y);
-            // console.log(this.waypoints.toTopRight.points);
-            // console.log(this.waypoints.toTopRight.step);
-            ctx.lineTo(this.waypoints.toTopRight.points[this.waypoints.toTopRight.step].x, this.waypoints.toTopRight.points[this.waypoints.toTopRight.step].y);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = this.colors.diseaseArms;
-            ctx.stroke();
-          }
-          this.diseaseArms.topRight.size++;        
+          this.waypoints.toTopRight.step += this.waypoints.toTopRight.points.length / this.diseaseSpeed.topRight;
         } else {
           ctx.beginPath();
           ctx.moveTo(this.waypoints.toTopRight.points[0].x, this.waypoints.toTopRight.points[0].y);
@@ -307,29 +323,23 @@ export default class Person {
       // DiseaseArm Bottom-Right
       if (this.diseaseArms.bottomRight.enabled) {
         if (this.waypoints.toBottomRight.step < 99) {
-          if (this.diseaseArms.bottomRight.size % this.diseaseSpeed.bottomRight === 1) {
             ctx.beginPath();
-            ctx.moveTo(this.waypoints.toBottomRight.points[0].x, this.waypoints.toBottomRight.points[0].y);
-            ctx.lineTo(this.waypoints.toBottomRight.points[this.waypoints.toBottomRight.step].x, this.waypoints.toBottomRight.points[this.waypoints.toBottomRight.step].y);
-            ctx.lineWidth = 2;
+            ctx.moveTo(
+              this.waypoints.toBottomRight.points[0].x, 
+              this.waypoints.toBottomRight.points[0].y
+            );
+            ctx.lineTo(
+              this.waypoints.toBottomRight.points[Math.floor(this.waypoints.toBottomRight.step)].x, 
+              this.waypoints.toBottomRight.points[Math.floor(this.waypoints.toBottomRight.step)].y
+            );
             ctx.strokeStyle = this.colors.diseaseArms;
             ctx.stroke();
 
-            this.waypoints.toBottomRight.step++;
-          } else {
-            ctx.beginPath();
-            ctx.moveTo(this.waypoints.toBottomRight.points[0].x, this.waypoints.toBottomRight.points[0].y);
-            ctx.lineTo(this.waypoints.toBottomRight.points[this.waypoints.toBottomRight.step].x, this.waypoints.toBottomRight.points[this.waypoints.toBottomRight.step].y);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = this.colors.diseaseArms;
-            ctx.stroke();
-          }
-          this.diseaseArms.bottomRight.size++;
+            this.waypoints.toBottomRight.step += this.waypoints.toBottomRight.points.length / this.diseaseSpeed.bottomRight;
         } else {
           ctx.beginPath();
           ctx.moveTo(this.waypoints.toBottomRight.points[0].x, this.waypoints.toBottomRight.points[0].y);
           ctx.lineTo(this.waypoints.toBottomRight.points[99].x, this.waypoints.toBottomRight.points[99].y);
-          ctx.lineWidth = 2;
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
@@ -343,29 +353,23 @@ export default class Person {
       // DiseaseArm Bottom-Left  
       if (this.diseaseArms.bottomLeft.enabled) {
         if (this.waypoints.toBottomLeft.step < 99) {
-          if (this.diseaseArms.bottomLeft.size % this.diseaseSpeed.bottomLeft === 1) {
-            ctx.beginPath();
-            ctx.moveTo(this.waypoints.toBottomLeft.points[0].x, this.waypoints.toBottomLeft.points[0].y);
-            ctx.lineTo(this.waypoints.toBottomLeft.points[this.waypoints.toBottomLeft.step].x, this.waypoints.toBottomLeft.points[this.waypoints.toBottomLeft.step].y);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = this.colors.diseaseArms;
-            ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(
+            this.waypoints.toBottomLeft.points[0].x, 
+            this.waypoints.toBottomLeft.points[0].y
+          );
+          ctx.lineTo(
+            this.waypoints.toBottomLeft.points[Math.floor(this.waypoints.toBottomLeft.step)].x, 
+            this.waypoints.toBottomLeft.points[Math.floor(this.waypoints.toBottomLeft.step)].y
+          );
+          ctx.strokeStyle = this.colors.diseaseArms;
+          ctx.stroke();
 
-            this.waypoints.toBottomLeft.step++;
-          } else {
-            ctx.beginPath();
-            ctx.moveTo(this.waypoints.toBottomLeft.points[0].x, this.waypoints.toBottomLeft.points[0].y);
-            ctx.lineTo(this.waypoints.toBottomLeft.points[this.waypoints.toBottomLeft.step].x, this.waypoints.toBottomLeft.points[this.waypoints.toBottomLeft.step].y);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = this.colors.diseaseArms;
-            ctx.stroke();
-          }
-          this.diseaseArms.bottomLeft.size++;
+          this.waypoints.toBottomLeft.step += this.waypoints.toBottomLeft.points.length / this.diseaseSpeed.bottomLeft;
         } else {
           ctx.beginPath();
           ctx.moveTo(this.waypoints.toBottomLeft.points[0].x, this.waypoints.toBottomLeft.points[0].y);
           ctx.lineTo(this.waypoints.toBottomLeft.points[99].x, this.waypoints.toBottomLeft.points[99].y);
-          ctx.lineWidth = 2;
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
@@ -379,29 +383,24 @@ export default class Person {
       // DiseaseArm Top-Left  
       if (this.diseaseArms.topLeft.enabled) {
         if (this.waypoints.toTopLeft.step < 99) {
-          if (this.diseaseArms.topLeft.size % this.diseaseSpeed.topLeft === 1) {
-            ctx.beginPath();
-            ctx.moveTo(this.waypoints.toTopLeft.points[0].x, this.waypoints.toTopLeft.points[0].y);
-            ctx.lineTo(this.waypoints.toTopLeft.points[this.waypoints.toTopLeft.step].x, this.waypoints.toTopLeft.points[this.waypoints.toTopLeft.step].y);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = this.colors.diseaseArms;
-            ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(
+            this.waypoints.toTopLeft.points[0].x, 
+            this.waypoints.toTopLeft.points[0].y
+          );
+          ctx.lineTo(
+            this.waypoints.toTopLeft.points[Math.floor(this.waypoints.toTopLeft.step)].x, 
+            this.waypoints.toTopLeft.points[Math.floor(this.waypoints.toTopLeft.step)].y
+          );
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = this.colors.diseaseArms;
+          ctx.stroke();
 
-            this.waypoints.toTopLeft.step++;
-          } else {
-            ctx.beginPath();
-            ctx.moveTo(this.waypoints.toTopLeft.points[0].x, this.waypoints.toTopLeft.points[0].y);
-            ctx.lineTo(this.waypoints.toTopLeft.points[this.waypoints.toTopLeft.step].x, this.waypoints.toTopLeft.points[this.waypoints.toTopLeft.step].y);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = this.colors.diseaseArms;
-            ctx.stroke();
-          }
-          this.diseaseArms.topLeft.size++;
+          this.waypoints.toTopLeft.step += this.waypoints.toTopLeft.points.length / this.diseaseSpeed.topLeft;
         } else {
           ctx.beginPath();
           ctx.moveTo(this.waypoints.toTopLeft.points[0].x, this.waypoints.toTopLeft.points[0].y);
           ctx.lineTo(this.waypoints.toTopLeft.points[99].x, this.waypoints.toTopLeft.points[99].y);
-          ctx.lineWidth = 2;
           ctx.strokeStyle = this.colors.diseaseArms;
           ctx.stroke();
 
@@ -580,18 +579,8 @@ export default class Person {
   }
 
   update(ctx) {
-    // if (this.x - this.radius <= 0 || this.x + this.radius >= innerWidth) {
-    //   this.velocity.x = -this.velocity.x;
-    // }
-
-    // if (this.y - this.radius <= 0 || this.y + this.radius >= innerHeight) {
-    //   this.velocity.y = -this.velocity.y;
-    // }
-
-    // this.x += this.velocity.x;
-    // this.y += this.velocity.y;
-
     this.draw(ctx);
+    return this.status;
   }
 
   applyVaccine() {
@@ -615,6 +604,7 @@ export default class Person {
     if (this.status === 1) {
       this.status = 3;
       this.calcDiagonalWaypoints();
+      // this.soundInfected.play();
     }
   }
 }

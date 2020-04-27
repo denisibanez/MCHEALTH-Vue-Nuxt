@@ -62,6 +62,7 @@
   @import '~bootstrap/scss/variables'
   @import '~assets/sass/basics/bootstrap-override'
   @import '~bootstrap/scss/mixins'
+  @import '~assets/sass/variables'
 
   .c-header 
     width: 100%

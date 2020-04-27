@@ -87,7 +87,9 @@ export default {
 <style lang="sass" scoped>
   @import '~bootstrap/scss/functions'
   @import '~bootstrap/scss/variables'
+  @import '~assets/sass/basics/bootstrap-override'
   @import '~bootstrap/scss/mixins'
+  @import '~assets/sass/variables'
 
   $base-duration: 600ms
   $base-ease: cubic-bezier(0.25, 0.46, 0.45, 0.84)
