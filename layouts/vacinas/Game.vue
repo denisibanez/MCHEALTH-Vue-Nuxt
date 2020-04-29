@@ -6,7 +6,7 @@
           <h4 class="game-font-timer font-weight-normal lay-color-light-gray d-flex align-items-center">
             <span class="game-clock mr-1" :class="'gm-'+status"><span></span></span>
             <span>
-              {{ getRemainingTime() }}
+              {{ getRemainingTimeDisplay() }}
             </span>
           </h4>
           <button id="game-btn-pause" :class="['gm-'+status, status !== 'playing' ? 'disabled': '']" @click="pauseGame()">
@@ -144,29 +144,30 @@
     data: function() {
       return {
         config: {
-          timer: 30,          // (seconds) Max. time to complete the game
+          pausedTime: 0,        // Store paused timer to be added on continue game
+          timer: 30,            // (seconds) Max. time to complete the game
           field: {
-            x: 6,             // Number of columns
-            y: 9,             // Number of rows
+            x: 6,               // Number of columns
+            y: 9,               // Number of rows
           },
           infection: {
-            initInfected: 2,
-            velocity: {
-              axes: {         // Amount o frames to spread disease on diagonal | 24 = 1s
-                min: 72,      // 3s
-                max: 120,     // 5s
+            initInfected: 2,    // Amount of infected people initially
+            velocity: {         // Amount o frames to spread | 24 = 1s
+              axes: {         
+                min: 72,        // 3s
+                max: 120,       // 5s
               },
-              diag:  {        // Amount o frames to spread disease on diagonal | 24 = 1s
-                min: 120,     // 5s
-                max: 168,     // 7s
+              diag:  {
+                min: 120,       // 5s
+                max: 168,       // 7s
               },
             }, 
-            chance: 75        // (Percent) Chance of spreading to each person
+            chance: 75          // (Percent) Chance of spreading to each person
           },
-          personRadius: 15,
-          clickRadius: 15,
-          framerate: {
-            debug: false,
+          personRadius: 15,     // Radius on each person on field
+          clickRadius: 15,      // Radius reacheable to immunize population
+          debug: false,         // Debug mode (enable hack and show FPS)
+          framerate: {          // Vars needed to FPS and Timer counters
             frameCount: 0,
             fpsInterval: 0, 
             startTime: 0, 
@@ -175,73 +176,82 @@
             elapsed: 0,
           },
         },
-        score: {
+        score: {                // Variables needed for score counter
           healthy: 0,
           imune: 0,
           sick: 0,
         },
-        status: 'not-started',
-        soundStatus: 'on',
-        sounds: {
+        status: 'not-started',  // Game status: 'not-started', 'paused', 'playing' or 'ended'
+        soundStatus: 'off',     // Sound status: 'on' or 'off'
+        sounds: {               // Vars needed for sounds effects
           tap: null,
           win: null,
           lose: null,
           bg: null,
         },
-        centersArray: [],
-        population: [],
-        canvas: null,
-        ctx: null,
-        xDistance: 0,
-        yDistance: 0,
-        width: 400,
-        height: 570,
+        centersArray: [],       // Position of each person on population
+        population: [],         // Population array
+        canvas: null,           // HTML canvas element
+        ctx: null,              // CTX from canvas
+        xDistance: 0,           // X distange between people on population 
+        yDistance: 0,           // Y distange between people on population
+        width: 400,             // Canvas width
+        height: 570,            // Canvas height
       }
     },
     methods: {
-      init: function() {
+      init: function() { // Initiate all dependencies for game (executed only once)
+        // Default canvas variavles
         this.canvas = document.getElementById('c-game-canvas');
         this.ctx = this.canvas.getContext('2d');
         
-        // Set actual size in memory (scaled to account for extra pixel density).
-        let scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
+        // Set actual dimentions in memory (scaled to account for extra pixel density)
+        let scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas
         this.canvas.width = this.width * scale;
         this.canvas.height = this.height * scale;
 
-        // Normalize coordinate system to use css pixels.
+        // Normalize coordinate system to use css pixels
         this.ctx.scale(scale, scale);
 
+        // Paint canvas
         this.canvas.style.backgroundColor = "#2E3337";
 
+        // Calc X and Y distances for population
         this.xDistance = Math.trunc(this.width / (this.config.field.x + 1));
         this.yDistance = Math.trunc(this.height / (this.config.field.y + 1));
 
+        // Instanciate sounds effects
         this.sounds.tap = new Howl({ src: ['/sounds/vacinas/game-tap.mp3'] });
         this.sounds.win = new Howl({ src: ['/sounds/vacinas/game-win.mp3'] });
         this.sounds.lose = new Howl({ src: ['/sounds/vacinas/game-lose.mp3'] });
         this.sounds.bg = new Howl({ src: ['/sounds/vacinas/game-background.mp3'],loop: true, volume: 0.3 });
 
+        // Intanciate population
         this.initGame();
 
+        // Add listeners on canvas
         this.canvas.addEventListener('click', this.click);
-
-        // let clicked = false;
-        // let downListener = (event) => { clicked = true; };
-        // let moveListener = (event) => { if (clicked) { this.click(event); } };
-        // let upListener = (event) => { clicked = false; };
-        // this.canvas.addEventListener('mousedown', downListener);
-        // this.canvas.addEventListener('mousemove', moveListener);
-        // this.canvas.addEventListener('mouseup', upListener);
+        if (this.config.debug) { // Enable hack on debug mode
+          let clicked = false;
+          let downListener = (event) => { clicked = true; };
+          let moveListener = (event) => { if (clicked) { this.click(event); } };
+          let upListener = (event) => { clicked = false; };
+          this.canvas.addEventListener('mousedown', downListener);
+          this.canvas.addEventListener('mousemove', moveListener);
+          this.canvas.addEventListener('mouseup', upListener);
+        }
       },
-      cleanScore: function() {
+      cleanScore: function() { // Reset score to initial values
         this.score.imune = 0; 
         this.score.healthy = 97; 
         this.score.sick = 3; 
       },
-      initGame: function () {
+      initGame: function () { // Intanciate population
+        // Clean old values if exists
         this.centersArray = [];
         this.population = [];
 
+        // Calc people`s centers array
         for (let xCurrent = 0, x = 1; x <= this.config.field.x; x++) {
           xCurrent += this.xDistance;
           
@@ -254,16 +264,18 @@
           }
         }
         
+        // Reset score to initial values
         this.cleanScore();
         
+        // Set ramdomly initial infected people
         let infected = [];
         let infectedPosition = [];
         let allowedPosition = []
         for (let i = 1; i <= this.config.field.x * this.config.field.y; i++) {
           if (
-            !(i % this.config.field.y === 1) &&  // First Row
-            !(i % this.config.field.y === 0) &&  // Last Row
-            !(i <= this.config.field.y) &&  // First Column
+            !(i % this.config.field.y === 1) && // First Row
+            !(i % this.config.field.y === 0) && // Last Row
+            !(i <= this.config.field.y) && // First Column
             !(i >= (this.config.field.x * this.config.field.y) - (this.config.field.y - 1)) // Last Collum
           ) {
             allowedPosition.push(i);
@@ -276,6 +288,7 @@
           infected.push(allowedPosition[infectedPosition[i]]);
         }
 
+        // Dependencies for instanciate Person class
         let counter = 1;
         let distances = {
           x: this.xDistance,
@@ -283,8 +296,11 @@
         }        
         let disease = {};
 
+        // Instanciate each Person and add to Population array
         this.centersArray.forEach(center => {
-          let status = 1;
+          let status = 1; // Init status: 1 = healthy; 2 = Immune; 3 = Infected
+
+          // Randomly choose what directions will spread disease 
           let diseaseArms = {
             top:          { enabled: Math.random() >= 0.5, size: 0, infected: false, },
             right:        { enabled: Math.random() >= 0.5, size: 0, infected: false, },
@@ -296,7 +312,8 @@
             topLeft:      { enabled: Math.random() >= 0.5, infected: false, },
           };
 
-          disease = {     // Velocity of spread capability
+          // Randomly choose velocity to spread
+          disease = {
             top:          this.randomIntFromRange(this.config.infection.velocity.axes.min, this.config.infection.velocity.axes.max),
             right:        this.randomIntFromRange(this.config.infection.velocity.axes.min, this.config.infection.velocity.axes.max),
             bottom:       this.randomIntFromRange(this.config.infection.velocity.axes.min, this.config.infection.velocity.axes.max),
@@ -307,42 +324,47 @@
             topLeft:      this.randomIntFromRange(this.config.infection.velocity.diag.min, this.config.infection.velocity.diag.max),
           };
 
+          // Infect person if was previously choosed
           if (infected.includes(counter)) {
             status = 3; 
             diseaseArms.top.enabled = true;
             disease.top = this.config.infection.velocity.axes.min;
           }
 
-          if (counter % this.config.field.y === 1) { // First Row
+          // Disabled disease arms for out of the field
+          if (counter % this.config.field.y === 1) { // First row
             diseaseArms.top.enabled = false;
             diseaseArms.topRight.enabled = false;
             diseaseArms.topLeft.enabled = false;
           }
-          if (counter % this.config.field.y === 0) { // Last Row
+          if (counter % this.config.field.y === 0) { // Last row
             diseaseArms.bottom.enabled = false;
             diseaseArms.bottomLeft.enabled = false;
             diseaseArms.bottomRight.enabled = false;
           }
-          if (counter <= this.config.field.y) { // First Column
+          if (counter <= this.config.field.y) { // First column
             diseaseArms.left.enabled = false;
             diseaseArms.topLeft.enabled = false;
             diseaseArms.bottomLeft.enabled = false;
           }
-          if (counter >= (this.config.field.x * this.config.field.y) - (this.config.field.y - 1)) { // Last Column
+          if (counter >= (this.config.field.x * this.config.field.y) - (this.config.field.y - 1)) { // Last column
             diseaseArms.right.enabled = false;
             diseaseArms.topRight.enabled = false;
             diseaseArms.bottomRight.enabled = false;
           }
 
+          // Instanciate Person and add to Population array
           this.population.push(new Person(center.x, center.y, disease, status, distances, diseaseArms, this.config.personRadius));
 
           counter++;
         });
-
-        counter = 1
+        
+        // Store surround people of each person to be infected later 
+        counter = 1;
         this.population.forEach(person => {
           let surroundPeople = [];
 
+          // Get closest Person to each direction enabled
           if (person.diseaseArms.top.enabled) {
             surroundPeople.push({ 
               position: "top", 
@@ -392,12 +414,13 @@
             });
           }
 
+          // Save closest people into each Person (to be infected later) 
           person.setMounted(surroundPeople);
 
           counter++;
         });
       },
-      click: function(event) {
+      click: function(event) { // Apply vaccine on population
         let rect = event.target.getBoundingClientRect();
         let x = event.clientX - rect.left; // x position within the element.
         let y = event.clientY - rect.top;  // y position within the element.
@@ -410,7 +433,15 @@
           }
         });
       },
-      startTimer: function() {
+      initTimer: function() {
+        this.config.pausedTime = 0;
+        this.config.framerate.then = window.performance.now();
+        this.config.framerate.startTime = this.config.framerate.then;
+      },
+      pauseTimer: function() {
+        this.config.pausedTime = this.getRemainingTime();
+      },
+      continueTimer: function() {
         this.config.framerate.then = window.performance.now();
         this.config.framerate.startTime = this.config.framerate.then;
       },
@@ -422,12 +453,9 @@
         // Request another frame
         window.requestAnimationFrame(this.animate);
 
-        if (this.status != 'playing') {
-          return;
-        }
+        if (this.status != 'playing') { return; }
 
-        // console.log(this.getRemainingTime());
-        if (this.getRemainingTime() === '0:00') {
+        if (this.getRemainingTimeDisplay() === '0:00') {
           this.pauseGame();
           this.status = 'ended';
           return;
@@ -445,7 +473,8 @@
           
           // Clear canvas
           this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          // Draw battlefield guidelines
+
+          // Draw field guidelines
           for (let xCurrent = 0, x = 1; x <= this.config.field.x; x++) { // Horizontal guidelines
             xCurrent += this.xDistance;
           
@@ -467,21 +496,23 @@
             this.ctx.stroke();
           }
           
-          // Update population
+          // Update population and get it status
           let scores = [];
           this.population.forEach(person => {
             scores.push(person.update(this.ctx));
           });
           
+          // Set score
           this.score.healthy = Math.round((this.countItems(scores, 1) / this.centersArray.length) * 100);
           this.score.imune = Math.round((this.countItems(scores, 2) / this.centersArray.length) * 100);
           this.score.sick = Math.round((this.countItems(scores, 3) / this.centersArray.length) * 100);
           
-          if (this.config.framerate.debug) {
-            var sinceStart = this.config.framerate.now - this.config.framerate.startTime;
-            var currentFps = Math.round(1000 / (sinceStart / ++this.config.framerate.frameCount) * 100) / 100;
+          // Show FPS on debug mode
+          if (this.config.debug) {
+            let sinceStart = this.config.framerate.now - this.config.framerate.startTime;
+            let currentFps = Math.round(1000 / (sinceStart / ++this.config.framerate.frameCount) * 100) / 100;
 
-            // Draw number to the screen
+            // Write FPS on canvas
             this.ctx.font = '25px Arial';
             this.ctx.fillStyle = 'white';
             this.ctx.fillText("Time passed: " + Math.floor(sinceStart / 1000) + " - FPS: " + currentFps, 10, 30);
@@ -510,28 +541,51 @@
 
         return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
       },
-      getRemainingTime: function() {
-        var time = this.config.timer - ((this.config.framerate.now - this.config.framerate.startTime) / 1000);
-        if (isNaN(time)) {
-          return;
+      getRemainingTime: function() { // Calc timer, return int value
+        let time;
+
+        if (this.config.pausedTime !== 0) {
+          time = this.config.pausedTime - ((this.config.framerate.now - this.config.framerate.startTime) / 1000);
+        } else {
+          time = this.config.timer - ((this.config.framerate.now - this.config.framerate.startTime) / 1000);
         }
-        return time > 0 ? time.toFixed(2).toString().split('.').join(':') : '0:00'; 
+
+        if (isNaN(time)) { return; }
+
+        return time;
+      },
+      getRemainingTimeDisplay: function() { // Format timer to display on HTML
+        if (this.status === 'playing') {
+          return formatTime(this.getRemainingTime());
+        } else if (this.status === 'not-started') {
+          return this.config.timer + 's';
+        } else {
+          return formatTime(this.config.pausedTime);
+        }
+
+        function formatTime(time) {
+          return time > 0 ? time.toFixed(2).toString().split('.').join(':') : '0:00';
+        };
       },
       playGame: function() {
         if (this.status === 'not-started') {
-          this.startTimer();
+          this.initTimer();
+          this.startAnimating(24);
+        } else if (this.status === 'paused') {
+          this.continueTimer();
         }
+
         this.status = 'playing';
-        this.startAnimating(24);
       },
       pauseGame: function() {
         if (this.status === 'playing') {
+          this.pauseTimer();
           this.status = 'paused';
         }
       },
       restartGame: function() {
         this.status = 'playing';
-        this.startTimer();
+        this.initTimer();
         this.initGame();
       },
       switchSound: function() {
@@ -555,6 +609,16 @@
       let { refOverlayInitial, refOverlayPause, refCanvas } = this.$refs;
       TweenLite.to(refOverlayInitial, .5, { opacity: 1, display: 'block'});
       TweenLite.to(refCanvas, .5, { opacity: 0, display: 'none'});
+
+      function onBlur() {
+        this.pauseGame();
+      }
+
+      if (/*@cc_on!@*/false) { // Check for Internet Explorer
+        document.onfocusout = onBlur.bind(this);
+      } else {
+        window.onblur = onBlur.bind(this);
+      }
 
       this.init();
     },
@@ -653,6 +717,8 @@
         top: 10% 
         transform-origin: bottom center
         border-radius: 2px 
+        animation: rotating 2s linear infinite
+        animation-play-state: running
       &::after
         display: block
         content: " "
@@ -665,14 +731,11 @@
         top: 20% 
         transform-origin: bottom center
         border-radius: 2px 
-      &.gm-playing
-        &::before
-          animation: rotating 2s linear infinite
-          animation-play-state: running
-        &::after
-          animation: rotating 6s linear infinite
-          animation-play-state: running
-      &.gm-paused
+        animation: rotating 6s linear infinite
+        animation-play-state: running
+      &.gm-paused,
+      &.gm-not-started,
+      &.gm-ended
         &::before,
         &::after
           animation-play-state: paused
@@ -767,9 +830,7 @@
               animation: pulsing 1s linear infinite
         &.gm-sound-off
           &::after
-            opacity: 1
-            transform: scale(.4)
-
+            opacity: .2
 
   @keyframes animatedBackground
     from
@@ -810,8 +871,6 @@
       -webkit-transform: scale(.9)
       -o-transform: scale(.9)
       transform: scale(.9)
-
-
 
   @include media-breakpoint-down(sm)
     .c-game
