@@ -2,7 +2,7 @@
   <div class="c-game shadow-lg rounded overflow-hidden" :style="{width: width + 'px'}">
     <div id="game-header" class="px-3 px-md-5 py-3 py-md-4">
       <div class="row justify-content-center align-items-center no-gutters">
-        <div class="col-6 pr-0">
+        <div class="col-6 pr-0 text-left">
           <h4 class="game-font-timer font-weight-normal lay-color-light-gray d-flex align-items-center">
             <span class="game-clock mr-1" :class="'gm-'+status"><span></span></span>
             <span>
@@ -38,7 +38,7 @@
     <div class="game-content" :style="{width: this.width + 'px', height: this.height + 'px'}">
       <div id="game-overlay-initial" class="w-100 h-100" :style="{ backgroundImage: 'url(' + require('@/assets/images/vacinas/game-background.jpg') + ')' }" ref="refOverlayInitial">
         <div class="row no-gutters w-100 h-100 align-items-center justify-content-center">
-          <div class="col-md-7 col-8 text-center pb-5">
+          <div class="col-md-6 col-8 text-center pb-5">
             <button class="btn btn-default-orange-button-arrow lay-color-black c-magnetic mb-3 w-100" @click="playGame()">
               Começar jogo
             </button>
@@ -62,16 +62,18 @@
           </div>
         </div>
       </div>
-      <div id="game-overlay-end" class="w-100 h-100" ref="refOverlayEnd">
+      <div id="game-overlay-end" class="w-100 h-100 text-left" ref="refOverlayEnd">
         <div class="row no-gutters w-100 h-100 align-items-center justify-content-center">
           <section class="col-9" v-if="score.imune >= 95">
             <h2 class="lay-color-orange mb-2">
-              <span>Parabéns, você conseguiu!</span>
+              <span>Parabéns, a doênça foi erradicada!</span>
             </h2>
             <p class="mb-3">Você imunizou <strong class="lay-color-orange">{{score.imune}}%</strong> da população.</p>
-            <p class="lay-color-light-gray">
-              Para uma doênça ser considerada <strong class="lay-color-orange">erradicada</strong>, pelo menos <strong class="lay-color-orange">95%</strong> da população precisa estar <strong class="lay-color-orange">imunizada</strong> à ela!
-            </p>
+            <div class="p-3 lay-bg-darker rounded mb-3">
+              <p class="lay-color-light-gray m-0">
+                Para uma doênça ser considerada <strong class="lay-color-orange">erradicada</strong>, pelo menos <strong class="lay-color-orange">95%</strong> da população precisa estar <strong class="lay-color-orange">imunizada</strong> à ela.
+              </p>
+            </div>
             <p class="lay-color-light-gray">
               Compartilhe
             </p>
@@ -84,24 +86,24 @@
               inline-template
               class="mb-3">
               <div>
-              <network network="facebook">
-                <span class="icomoon-facebook lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
-              </network>
-              <network network="linkedin">
-                <span class="icomoon-linkedin lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
-              </network>
-              <network network="whatsapp">
-                <span class="icomoon-whatsapp lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
-              </network>
-              <network network="twitter">
-                <span class="icomoon-twitter lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
-              </network>
-              <network network="email">
-                <span class="icomoon-letter lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
-              </network>
+                <network network="facebook">
+                  <span class="icomoon-facebook lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
+                </network>
+                <network network="linkedin">
+                  <span class="icomoon-linkedin lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
+                </network>
+                <network network="whatsapp">
+                  <span class="icomoon-whatsapp lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
+                </network>
+                <network network="twitter">
+                  <span class="icomoon-twitter lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
+                </network>
+                <network network="email">
+                  <span class="icomoon-letter lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
+                </network>
               </div>
             </social-sharing>
-            <a href="#" @click="restartGame()" class="lay-color-light-gray text-decoration-none">
+            <a v-on:click.prevent.stop="restartGame()" class="lay-color-light-gray text-decoration-none">
               <span class="icomoon-reload"></span> Jogar novamente
             </a>
           </section>
@@ -110,11 +112,13 @@
               <!-- <img class="icon-face-md mr-1" src="~/assets/images/vacinas/game-face-sick.svg" alt="Doentes">  -->
               <span>Sinto muito...</span>
             </h2>
-            <p class="mb-3">Você imunizou somente <strong class="lay-color-orange">{{score.imune}}%</strong> da população.</p>
-            <p class="lay-color-light-gray">
-              Lembre-se, para uma doênça ser considerada <strong class="lay-color-orange">erradicada</strong>, pelo menos <strong class="lay-color-orange">95%</strong> da população precisa estar <strong class="lay-color-orange">imunizada</strong> à ela.
-            </p>
-            <a href="#" @click="restartGame()" class="lay-color-light-gray text-decoration-none">
+            <p class="mb-3">A doênca não foi erradicada. Você imunizou somente <strong class="lay-color-orange">{{score.imune}}%</strong> da população.</p>
+            <div class="p-3 lay-bg-darker rounded mb-3">
+              <p class="lay-color-light-gray m-0">
+                Para uma doênça ser considerada <strong class="lay-color-orange">erradicada</strong>, pelo menos <strong class="lay-color-orange">95%</strong> da população precisa estar <strong class="lay-color-orange">imunizada</strong> à ela.
+              </p>
+            </div>
+            <a v-on:click.prevent.stop="restartGame()" class="lay-color-light-gray text-decoration-none">
               <span class="icomoon-reload"></span> Tentar novamente
             </a>
           </section>
@@ -182,7 +186,7 @@
           sick: 0,
         },
         status: 'not-started',  // Game status: 'not-started', 'paused', 'playing' or 'ended'
-        soundStatus: 'off',     // Sound status: 'on' or 'off'
+        soundStatus: 'on',     // Sound status: 'on' or 'off'
         sounds: {               // Vars needed for sounds effects
           tap: null,
           win: null,
@@ -195,7 +199,7 @@
         ctx: null,              // CTX from canvas
         xDistance: 0,           // X distange between people on population 
         yDistance: 0,           // Y distange between people on population
-        width: 400,             // Canvas width
+        width: 480,             // Canvas width
         height: 570,            // Canvas height
       }
     },
@@ -684,6 +688,7 @@
     background-color: #25292C
     width: 400px
     touch-action: manipulation
+    display: inline-block
     .game-font-timer
       font-size: 2.5rem
     .game-color-yellow

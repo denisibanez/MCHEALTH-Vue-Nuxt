@@ -26,7 +26,7 @@
                 {{ slide.description }}
               </p>
               <nuxt-link :to="slide.link" class="slide__action btn btn-default-orange-button-arrow lay-color-black c-magnetic">
-                  {{ slide.button }}
+                {{ slide.button }}
               </nuxt-link>
             </article>
           </li>

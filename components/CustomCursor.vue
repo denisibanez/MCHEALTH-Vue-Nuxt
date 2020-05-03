@@ -169,6 +169,8 @@
         }
       },
       canEnableMagnetic: function () {
+        return false;
+
         const ua = window.navigator.userAgent.toLowerCase();
         
         if (ua.indexOf('ipad') > -1 ||
@@ -206,10 +208,12 @@
         }
 
         this.$root.$on('updateCursorListeners', () => {
-          this.helpers.links.map(link => {
-            link.removeEventListener('mousemove', this.helpers.listenerMouseMove);
-            link.removeEventListener('mouseout', this.helpers.listenerMouseOut);
-          });
+          if (this.helpers.links) {
+            this.helpers.links.map(link => {
+              link.removeEventListener('mousemove', this.helpers.listenerMouseMove);
+              link.removeEventListener('mouseout', this.helpers.listenerMouseOut);
+            });
+          }
 
           this.mouseCursorConstructor();
           this.mouseCursorRender();
