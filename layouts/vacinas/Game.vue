@@ -1,5 +1,5 @@
 <template>
-  <div class="c-game shadow-lg rounded overflow-hidden" :style="{width: width + 'px'}">
+  <div class="c-game shadow-lg rounded" :style="{width: width + 'px'}">
     <div id="game-header" class="px-3 px-md-5 py-3 py-md-4">
       <div class="row justify-content-center align-items-center no-gutters">
         <div class="col-6 pr-0 text-left">
@@ -35,7 +35,7 @@
         </div> 
       </div>
     </div>
-    <div class="game-content" :style="{width: this.width + 'px', height: this.height + 'px'}">
+    <div class="game-content rounded-bottom overflow-hidden" :style="{width: this.width + 'px', height: this.height + 'px'}">
       <div id="game-overlay-initial" class="w-100 h-100" :style="{ backgroundImage: 'url(' + require('@/assets/images/vacinas/game-background.jpg') + ')' }" ref="refOverlayInitial">
         <div class="row no-gutters w-100 h-100 align-items-center justify-content-center">
           <div class="col-md-6 col-8 text-center pb-5">
@@ -199,7 +199,7 @@
         ctx: null,              // CTX from canvas
         xDistance: 0,           // X distange between people on population 
         yDistance: 0,           // Y distange between people on population
-        width: 480,             // Canvas width
+        width: null,            // Canvas width (get from parent)
         height: 570,            // Canvas height
       }
     },
@@ -209,6 +209,9 @@
         this.canvas = document.getElementById('c-game-canvas');
         this.ctx = this.canvas.getContext('2d');
         
+        // Set Width
+        this.width = this.$parent.$refs.refContainerGame.clientWidth;
+
         // Set actual dimentions in memory (scaled to account for extra pixel density)
         let scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas
         this.canvas.width = this.width * scale;
@@ -689,6 +692,19 @@
     width: 400px
     touch-action: manipulation
     display: inline-block
+    position: relative
+
+    &::before
+      border-radius: 5px
+      display: block
+      content: " "
+      width: 150px
+      height: 150px
+      border: 1px solid map-get($color-config, "orange")
+      position: absolute
+      left: -15px
+      bottom: -15px
+
     .game-font-timer
       font-size: 2.5rem
     .game-color-yellow

@@ -5,3 +5,5 @@
 @each $value in $color-config
     .lay-bg-#{nth($value, 1)}
         background-color: nth($value, 2)
+    .lay-bg-#{nth($value, 1)}-transp-50
+        background-color: rgba(nth($value, 2), .5)

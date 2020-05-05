@@ -55,7 +55,7 @@
   }
 
 export default {
-  name: 'Banner',
+  name: 'BannerParallax',
   data: function() {
     return {
       x: 0,

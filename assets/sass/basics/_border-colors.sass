@@ -1,0 +1,9 @@
+// ==========================================================================
+// BASICS > BORDERS COLORS
+// ==========================================================================
+
+@each $value in $color-config
+    .lay-border-#{nth($value, 1)}
+        border-color: nth($value, 2) !important
+    .lay-border-#{nth($value, 1)}-transp-50
+        border-color: rgba(nth($value, 2), .5) !important

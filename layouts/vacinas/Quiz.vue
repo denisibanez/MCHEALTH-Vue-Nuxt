@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="quiz-endfeedback-box" ref="refEndFeedback">
-        <div class="w-100 h-100 d-flex align-items-center p-5" v-if="completed">
+        <div class="w-100 h-100 d-flex align-items-center p-5" style="overflow: scroll;" v-if="completed">
           <div class="w-100" v-if="getScore() > (quizData.length - 3)">
             <h3 class="lay-color-orange m-0">
               Parabéns
@@ -126,7 +126,7 @@
         </div>
       </div>
     </div>
-    <div class="quiz-pagination p-4 text-center">
+    <div class="quiz-pagination pt-4 text-center">
       <span class="quiz-page" v-for="(item, index) in quizData" :key="item.question" :class="index <= currentQuest ? 'active' : ''"></span>
     </div>
   </div>
@@ -302,7 +302,7 @@
       --x: 0
       --y: 0
       --d: 50
-      min-height: 600px
+      min-height: 700px
       background-color: #25292C
       position: relative
       overflow: hidden

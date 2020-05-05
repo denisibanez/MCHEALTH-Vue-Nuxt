@@ -6,7 +6,6 @@
 
 <script>
   import * as THREE from 'three';
-  
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
   import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 
@@ -98,7 +97,7 @@
           const mousePosY = e.clientY;
 
           that.camera.position.x = 1.5 + (mousePosX / 800);
-          // that.camera.position.y = 0 + (mousePosY / 1000);
+          that.camera.position.y = 0 + (mousePosY / 1000);
           
           that.camera.lookAt(0, 0, 0)
         }
