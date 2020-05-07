@@ -6,8 +6,8 @@
     ref="refContainer">
       <div class="quiz-bg" :style="{ backgroundImage: 'url(' + require('@/assets/images/' + quizData[currentQuest].image) + ')'}"></div>
       <span class="quiz-shadow"></span>
-      <div class="quiz-question-box d-flex align-items-center p-5 text-center" ref="refQuestion">
-        <h4 v-html="quizData[currentQuest].question" class="h2 p-4 font-weight-bold"></h4>
+      <div class="quiz-question-box d-flex align-items-center p-2 p-sm-5  text-center" ref="refQuestion">
+        <h4 v-html="quizData[currentQuest].question" class="h2 p-1 p-md-4 font-weight-bold"></h4>
       </div>
       <div class="quiz-feedback-box" ref="refFeedback">
         <div class="w-100 h-100 d-flex align-items-center p-5 text-center" v-if="quizData[currentQuest].answer !== null && quizData[currentQuest].confirmed">
@@ -417,5 +417,17 @@
     to
       background-position: -1000px 0
 
+  @include media-breakpoint-down(lg)
+
+  @include media-breakpoint-down(md)
+    .c-quiz
+      .quiz-container
+        min-height: 600px
+
   @include media-breakpoint-down(sm)
+    .c-quiz
+      &::before
+        display: none
+  @include media-breakpoint-down(xs)
+
 </style>

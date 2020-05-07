@@ -24,30 +24,28 @@
             <i class="icomoon-search"></i>
           </span>
         </span>
-      </div>
-
+      </div>  
       <!--
-      <div class="container">
-        <div class="row align-items-center justify-content-end">
-          <div class="col-md-6 pb-4 pb-md-0 text-center text-md-left">
-            <h4 class="text-white font-size-xl font-bebasneue">
-              POSSO ATRAPALHAR?
-            </h4>
-            <p class="lay-color-orange">
-              Sites, grupos de mensagens, opiniões de desconhecidos, <br> 
-              fake news e ignorância.
-            </p>
-            <p class="text-white mb-0">
-              Enquanto não há vacina contra pragas digitais, nos resta explicar os diversos aspectos sobre as vacinas e derrubar todos os mitos que rodeiam o tema.
-            </p>
-          </div>
-        </div>
-      </div>
-      -->
       <div id="effect-trigger"
       ref="refEffect"
       v-on:mousemove="handleMouseMove($event)"
       v-on:mouseleave="handleMouseLeave($event)"></div>
+      -->
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-5 offset-lg-6 col-md-6 offset-md-6 pb-5 pb-md-0 text-center text-md-left">
+          <h4 class="text-white banner-font-title font-weight-normal">
+            <b>POR QUE</b> AINDA<br class="d-none d-md-inline-block">
+            EXISTEM <b>PESSOAS</b><br class="d-none d-md-inline-block">
+            QUE SÃO CONTRA<br class="d-none d-md-inline-block">
+            AS <b class="lay-color-orange">VACINAS?</b> 
+          </h4>
+          <p class="text-white mb-0 px-4 px-md-0">
+            Existem muitas respostas para essa pergunta, o fato é que alguns dos <span class="lay-color-orange">9 principais motivos, de acordo com pesquisa realizada pelo IBOPE em 2019</span>, são razões baseadas na falta de conhecimento e inverdades disseminadas pela internet e por outros meios que impactam seriamente a vida da população, abrindo caminho até para doenças graves já erradicadas do Brasil. Visando esclarecer algumas dúvidas importantes, o Estadão produziu este especial de vacinas.
+          </p>
+        </div>
+      </div>
     </div>
     <div id="effect-overlay">
       <span id="overlay-shadow-frame"></span>
@@ -142,7 +140,10 @@
           
           setTimeout(this.chooseOptions, speed);
         } else {
+          this.type.counter = 0
           this.currentOption = null;
+          
+          setTimeout(this.chooseOptions, speed);
         }
       },
       resizeSearchBox: function(event) {
@@ -152,10 +153,6 @@
           (refEffectWrapper.clientWidth / 100 * 24.14) / this.fieldScale.elWidth,    
           refEffectWrapper.clientHeight / this.fieldScale.elHeight
         );
-
-        console.log(refEffectWrapper.clientHeight / this.fieldScale.elHeight);
-        console.log(refEffectWrapper.clientHeight);
-        console.log(this.fieldScale.elHeight);
       }
     },
     mounted () {
@@ -180,11 +177,11 @@
 
       const tl = new TimelineLite(); 
       tl.pause()
-      .from(refSearchField,   .5, { scale: 0 })
-      .from(refSearchBtn,     .5, { scale: 0, x: "-=200" }, "-=.5")
+      .to(refSearchField,   .5, { scale: 1 })
+      .to(refSearchBtn,     .5, { scale: 1.1, x: 0 }, "-=.5")
       .to(refSearchField,     .2, { css: { borderBottomLeftRadius: 0 } }, "+=4")
-      .from(refSearchOptions, .1, { opacity: 0 }, "-=.1")
-      .from(refSearchOptions, .4, { height: 0 }, "-=.1")
+      .to(refSearchOptions, .1, { opacity: 1 }, "-=.1")
+      .to(refSearchOptions, .4, { height: 'auto' }, "-=.1")
 
       setTimeout(() => {
         tl.play();
@@ -208,7 +205,6 @@
 
   #c-bannersearches
     width: 100%
-    // height: calc(100vh - 90px)
     background-color: #020202
     background: radial-gradient(circle, rgba(37,36,36,1) 0%, rgba(2,2,2,1) 100%)
     position: relative
@@ -232,6 +228,19 @@
       left: 0
       right: 0
       margin: auto
+      z-index: 3
+      .banner-font-title
+        position: relative
+        font-size: 2.5rem
+        &::before 
+          position: absolute
+          content: " "
+          width: 180px
+          height: 40px
+          background-color: map-get($color-config, "orange")
+          top: -5px
+          left: -15px
+          z-index: -1
 
     .container,
     .row
@@ -264,6 +273,14 @@
         left: 50%
         margin-left: -38%
         bottom: -2%
+
+      #parallax-eyebrow-left,
+      #parallax-eyebrow-right
+        animation-duration: 5s
+        animation-iteration-count: infinite
+        animation-timing-function: ease-in-out
+        animation-name: floating
+        animation-delay: 1000ms
 
       #parallax-eyebrow-left
         --d: 30
@@ -309,6 +326,9 @@
           z-index: 1
           border-top-left-radius: 15px 
           border-bottom-left-radius: 15px 
+          border-top-right-radius: 15px 
+          border-bottom-right-radius: 15px 
+          transform: scale(0)
           #search-term
             border-right: 1px solid rgba(#000, .8)
             padding-right: 1px
@@ -327,7 +347,7 @@
           position: absolute
           top: 0
           right: -25px
-          transform: scale(1.1)
+          transform: scale(0)
           z-index: 2
           border-radius: 50%
 
@@ -340,6 +360,8 @@
           padding-top: 5px
           padding-bottom: 5px
           overflow: hidden
+          opacity: 0
+          height: 0
           .search-option
             display: block
             width: 100%
@@ -402,104 +424,71 @@
       to
         border-right: none
 
+  @keyframes floating 
+      from
+        transform: scale(1) translate(0px, 0px)
+      65%
+        transform: scale(1.025) translate(0px, -10px)
+      to
+        transform: scale(1) translate(0px, 0px)
+
   @include media-breakpoint-down(lg)
 
   @include media-breakpoint-down(md)
-
+    #c-bannersearches
+      .container
+        .banner-font-title
+          font-size: 2.1rem
   @include media-breakpoint-down(sm)
     #c-bannersearches
-      padding-top: 380px
-
+      padding-top: 320px
+      max-height: initial
+      
       #c-bannersearches-inner-wrapper
         padding-bottom: 0
+        position: absolute
+        width: 100%
+        height: 100%
+        top: 0
+        left: 0
 
       .container
         position: initial
         left: initial
         right: initial
+        .banner-font-title
+          font-size: 2rem
+          &::before 
+            display: none
 
       #effect-wrapper
-
-        @keyframes floating 
-            from
-              transform: scale(1) translate(0px, 0px)
-            65%
-              transform: scale(1.025) translate(-15px, 0)
-            to
-              transform: scale(1) translate(0px, 0px)
-
-        [id*="parallax-"]
-          animation-duration: 5s
-          animation-iteration-count: infinite
-          animation-timing-function: ease-in-out
-
-        #parallax-cloud-4
-          --width: 200px !important
-          margin-left: -30px !important
-          top: 45px !important
-          animation-name: floating
-          animation-delay: 200ms
-
-        #parallax-phone
+        #parallax-eyebrow-left,
+        #parallax-eyebrow-right
           --width: 43px
-          margin-left: -80px
           bottom: initial
-          top: 40px
-          animation-name: floating
-          animation-delay: 400ms
+          top: 80px
 
-        #parallax-exclamation
-          --width: 17px
-          margin-left: -100px
-          bottom: initial
-          top: 43px
-          animation-name: floating
-          animation-delay: 100ms
+        #parallax-eyebrow-left
+          margin-left: -43px
 
-        #parallax-mic
-          --width: 43px
-          margin-left: 45px
-          bottom: initial
-          top: 110px
-          animation-name: floating
-          animation-delay: 600ms
+        #parallax-eyebrow-right
+          margin-left: -1px
+          top: 83px
 
-        #parallax-likes
-          --width: 35px
-          margin-left: 15px
+        #parallax-person
+          --width: 230px
+          margin-left: -103px
           bottom: initial
-          top: 90px
-          animation-name: floating
-          animation-delay: 800ms
-
-        #parallax-boy
-          --width: 223px
-          margin-left: -130px
-          bottom: initial
-          top: 100px
-
-        #parallax-chat
-          --width: 43px
-          margin-left: -140px
-          bottom: initial
-          top: 91px
-          animation-name: floating
-          animation-delay: 900ms
-
-        #parallax-table
-          --width: 195px
-          margin-left: -50px
-          bottom: initial
-          top: 300px
-
-        #parallax-notebook
-          --width: 115px
-          margin-left: 40px
-          bottom: initial
-          top: 200px
-          animation-name: floating
-          animation-delay: 100ms
+          top: 20px
       
+        #parallax-search-container
+          left: 50%
+          margin-left: -211px
+          bottom: initial
+          top: 150px
+          transform: scale(.55) !important
+          transform-origin: center
+
       #effect-trigger
         display: none
 
@@ -519,6 +508,6 @@
           top: 98%
           background-color: rgb(22,21,21)
 
-
   @include media-breakpoint-down(xs)
+
 </style>

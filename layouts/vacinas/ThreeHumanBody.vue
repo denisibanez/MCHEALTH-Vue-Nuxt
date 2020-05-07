@@ -126,19 +126,23 @@
     mounted() {
       this.init();
     },
-    watch: {
-      // width: function () {
-      //   console.log("width");
-      //   this.init();
-      // },
-      // height: function () {
-      //   console.log("height");
-      //   this.init();
-      // }
-    }
   }
 </script>
 
 <style lang="sass" scoped>
+  @import '~bootstrap/scss/functions'
+  @import '~bootstrap/scss/variables'
+  @import '~assets/sass/basics/bootstrap-override'
+  @import '~bootstrap/scss/mixins'
+  @import '~assets/sass/variables'
+
+  @include media-breakpoint-down(lg)
+
+  @include media-breakpoint-down(md)
+
+  @include media-breakpoint-down(sm)
+    #canvas
+      margin-left: -200px
+  @include media-breakpoint-down(xs)
 
 </style>

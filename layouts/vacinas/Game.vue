@@ -893,6 +893,15 @@
       -o-transform: scale(.9)
       transform: scale(.9)
 
+  @include media-breakpoint-down(lg)
+
+  @include media-breakpoint-down(md)
+    .c-game
+      &::before
+        display: none
+
+  @include media-breakpoint-down(sm)
+
   @include media-breakpoint-down(sm)
     .c-game
       .game-font-timer
