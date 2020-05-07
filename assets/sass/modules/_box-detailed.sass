@@ -22,8 +22,6 @@
       height: 300px
       border: 1px solid map-get($color-config, "orange")
       position: absolute
-      left: -5px
-      top: -5px
 
     &::after
       border-radius: 5px
@@ -31,7 +29,7 @@
       content: " "
       width: 100%
       height: 100%
-      background-color: map-get($color-config, "black")
+      background-color: map-get($color-config, "darker")
       position: absolute
       left: 0px
       top: 0px
@@ -39,7 +37,6 @@
   .content
     position: relative
     z-index: 5
-    padding: 30px
 
     &::before
       border-radius: 5px
@@ -49,5 +46,22 @@
       height: 20px
       border: 1px solid map-get($color-config, "orange")
       position: absolute
-      left: 5px
-      top: 5px
+
+  &[class*="box-detailed-left-top"]
+    .detail
+      &::before
+        left: -5px
+        top: -5px
+    .content
+      &::before
+        left: 5px
+        top: 5px
+  &[class*="box-detailed-right-top"]
+    .detail
+      &::before
+        right: -5px
+        top: -5px
+    .content
+      &::before
+        right: 5px
+        top: 5px

@@ -46,11 +46,6 @@
       return {
       }
     },
-    head () {
-      return {
-        title: "Estadão - Saúde&Ciência | Vacinas"
-      }
-    },
     methods: {
 
     },
