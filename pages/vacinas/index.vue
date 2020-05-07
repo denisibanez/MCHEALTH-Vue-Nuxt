@@ -27,11 +27,11 @@
           options: [ 
             {
               index: 0,
-              phrase: "<b>são perigosas ao bebê?</b>",
+              phrase: "<b>são perigosas ao bebê</b>",
             },
             {
               index: 1,
-              phrase: "<b>deixam sequelas?</b>",
+              phrase: "<b>deixam sequelas</b>",
             },
             {
               index: 2,
@@ -39,11 +39,11 @@
             },
             {
               index: 3,
-              phrase: "onde tomar?",
+              phrase: "onde tomar",
             },
             {
               index: 4,
-              phrase: "para o que servem?",
+              phrase: "para o que servem",
             }
           ]
         }
