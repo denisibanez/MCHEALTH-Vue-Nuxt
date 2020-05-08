@@ -2,16 +2,16 @@
   <div class="c-vacinas">
     <BannerTrendsSearches :bannerData="bannerTrendsData" />
     <SectionThreeHumanBody />
-    <SectionGame />
     <SectionQuiz />
+    <SectionGame />
   </div>
 </template>
 
 <script>
   import BannerTrendsSearches from "../../layouts/vacinas/BannerTrendsSearches";
-  import SectionThreeHumanBody from "../../layouts/vacinas/SectionThreeHumanBody";
-  import SectionGame from "../../layouts/vacinas/SectionGame";
-  import SectionQuiz from "../../layouts/vacinas/SectionQuiz";
+  import SectionThreeHumanBody from "../../layouts/vacinas/sections/SectionThreeHumanBody";
+  import SectionGame from "../../layouts/vacinas/sections/SectionGame";
+  import SectionQuiz from "../../layouts/vacinas/sections/SectionQuiz";
 
   export default {
     components: {

@@ -45,21 +45,17 @@
         this.vimeo.player.setColor('#ea9b1c');
 
         this.vimeo.player.on('ended', () => {
-          
+          // Do something
         });
-
         this.vimeo.player.on('bufferstart', () => {
           this.vimeo.status = 'loading';
         });
-
         this.vimeo.player.on('bufferend', () => {
           this.vimeo.status = 'played';
         });
-
         this.vimeo.player.on('play', () => {
           this.vimeo.status = 'played';
         });
-
         this.vimeo.player.on('pause', () => {
           this.vimeo.status = 'paused';
         });
@@ -108,6 +104,34 @@
         this.vimeo.mouseStatus = 'moving';
       });
     },
+    watch: {
+      url: function() { 
+        this.vimeo.options.url = 'https://vimeo.com/' + this.url;
+
+        this.vimeo.player.loadVideo(this.url).then(function(id) {
+          // the video successfully loaded
+        }).catch(function(error) {
+          switch (error.name) {
+            case 'TypeError':
+              // the id was not a number
+              break;
+
+            case 'PasswordError':
+              // the video is password-protected and the viewer needs to enter the
+              // password first
+              break;
+
+            case 'PrivacyError':
+              // the video is password-protected or private
+              break;
+
+            default:
+              // some other error occurred
+              break;
+          }
+        });
+      }
+    }
   }
 </script>
 
@@ -119,6 +143,8 @@
   @import '~assets/sass/variables'
 
   .c-vimeo-player
+    background-color: #000
+    width: 100%
     .vimeo-wrapper
       position: absolute
       width: 100%

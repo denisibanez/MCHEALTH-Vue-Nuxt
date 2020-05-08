@@ -1,6 +1,7 @@
 <template>
   <div class="c-section-quiz">
-    <div class="w-100 my-5 my-md-10">
+    <div class="background-effect" :style="{ backgroundImage: 'url(' + require('@/assets/images/vacinas/map-net.png') + ')' }"></div>
+    <div class="w-100 my-5 my-md-10 content-section">
       <div class="container">
         <div class="row align-items-center justify-content-center">
           <section class="col-md-6 col-lg-5 py-4">
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-  import Quiz from "./Quiz";
+  import Quiz from "./../Quiz";
 
   export default {
     name: 'SectionQuiz',
@@ -44,7 +45,7 @@
       return {
         quizData: [
           {
-            image: "vacinas/quiz/beach.png",
+            image: "vacinas/quiz/disease-01.png",
             question: "Mesmo com a <span class='lay-color-orange'>eliminação das doenças</span>, é necessário continuar tomando vacinas.",
             feedback: "Nos últimos três anos, a febre amarela e o sarampo voltaram, o que mostra a necessidade das vacinas.",
             answer: null,
@@ -52,23 +53,23 @@
             correctAnswer: true,
           },
           {
-            image: "vacinas/quiz/jellyfish.png",
-            question: "Tomar <span class='lay-color-orange'>muitas vacinas</span> pode sobrecarregar o sistema imunológico do bebê.",
+            image: "vacinas/quiz/baby-01.png",
+            question: "Tomar muitas vacinas pode sobrecarregar o <span class='lay-color-orange'>sistema imunológico</span> do bebê.",
             feedback: "O bebê recebe 30 vacinas em dois anos, mas sem afetar em nada o sistema imunológico.",
             answer: null,
             confirmed: null,
             correctAnswer: false,
           },
           {
-            image: "vacinas/quiz/rain.png",
-            question: "Algumas vacinas ajudam a <span class='lay-color-orange'>prevenir o câncer</span>.",
+            image: "vacinas/quiz/old-lady-01.png",
+            question: "Algumas vacinas ajudam a <span class='lay-color-orange'>prevenir câncer.</span>",
             feedback: "As vacinas que bloqueiam as hepatites e o HPV evitam tumores no fígado e no colo do útero, respectivamente. ",
             answer: null,
             confirmed: null,
             correctAnswer: true,
           },
           {
-            image: "vacinas/quiz/threes.png",
+            image: "vacinas/quiz/reaction-01.png",
             question: "<span class='lay-color-orange'>Reações à vacina</span> podem ser tão ruins quanto a própria doença e podem levar à morte. ",
             feedback: "A maior parte das reações são leves, como dor local e febre baixa. Consequências graves são extremamente raras.",
             answer: null,
@@ -76,8 +77,8 @@
             correctAnswer: false,
           },
           {
-            image: "vacinas/quiz/jellyfish.png",
-            question: "Idosos costumam desenvolver gripe logo <span class='lay-color-orange'>após se vacinarem contra a doença</span>.",
+            image: "vacinas/quiz/old-men-01.png",
+            question: "Idosos costumam desenvolver gripe logo <span class='lay-color-orange'>após se vacinarem</span> contra a doença.",
             feedback: "Pessoas que ficam gripadas após a vacinação já estavam infectadas pelo vírus antes de se vacinar.",
             answer: null,
             confirmed: null,
@@ -87,12 +88,10 @@
       }
     },
     methods: {
+    
     },
     mounted: function() {
-    },
-    transition: {
-      name: 'transition',
-      mode: 'out-in'
+    
     }
   }
 </script>
@@ -104,20 +103,45 @@
   @import '~bootstrap/scss/mixins'
   @import '~assets/sass/variables'
 
-  .transition-enter-active, 
-  .transition-leave-active
-    transition: opacity .4s ease-out 
+  .c-section-quiz
+    position: relative
+    overflow: hidden
+    .background-effect
+      position: absolute
+      width: 105%
+      height: 100%
+      top: 0%
+      left: 0
+      background-position: center center
+      background-size: cover
+      background-repeat: no-repeat
+      -webkit-animation-name: MovingSideways
+      -webkit-animation-duration: 30s
+      -webkit-animation-iteration-count: infinite
+      -webkit-animation-timing-function: ease-in-out
+      -moz-animation-name: MovingSideways
+      -moz-animation-duration: 30s
+      -moz-animation-iteration-count: infinite
+      -moz-animation-timing-function: ease-in-out
 
-  .transition-enter, 
-  .transition-leave-active
-    opacity: 0
-
+  @-webkit-keyframes MovingSideways
+    from 
+      -webkit-transform: translate(0%, 0px)
+    65% 
+      -webkit-transform: translate(-4%, 0px)
+    to 
+      -webkit-transform: translate(0%, 0px)
+      
   @include media-breakpoint-down(lg)
 
   @include media-breakpoint-down(md)
 
   @include media-breakpoint-down(sm)
-
+    .c-section-quiz
+      .background-effect
+        display: none
+        -webkit-animation-name: none
+        -moz-animation-name: none
   @include media-breakpoint-down(xs)
 
 </style>

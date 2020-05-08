@@ -7,10 +7,10 @@
       <div class="quiz-bg" :style="{ backgroundImage: 'url(' + require('@/assets/images/' + quizData[currentQuest].image) + ')'}"></div>
       <span class="quiz-shadow"></span>
       <div class="quiz-question-box d-flex align-items-center p-2 p-sm-5  text-center" ref="refQuestion">
-        <h4 v-html="quizData[currentQuest].question" class="h2 p-1 p-md-4 font-weight-bold"></h4>
+        <h4 v-html="quizData[currentQuest].question" class="h2 p-1 p-md-4 font-weight-bold quiz-font-title"></h4>
       </div>
       <div class="quiz-feedback-box" ref="refFeedback">
-        <div class="w-100 h-100 d-flex align-items-center p-5 text-center" v-if="quizData[currentQuest].answer !== null && quizData[currentQuest].confirmed">
+        <div class="w-100 h-100 d-flex align-items-center p-2 p-sm-3 p-md-5 text-center" v-if="quizData[currentQuest].answer !== null && quizData[currentQuest].confirmed">
           <div class="w-100">
             <div class="mb-3" v-if="quizData[currentQuest].answer === quizData[currentQuest].correctAnswer &&  quizData[currentQuest].confirmed">
               <span class="icomoon-checked-circle lay-color-orange quiz-feedback-icon"></span>
@@ -24,29 +24,29 @@
                 ERRADO
               </h3>
             </div>
-            <h4 v-if="quizData[currentQuest].correctAnswer === true" class="h1 px-4 font-weight-bold lay-color-orange">
+            <h4 v-if="quizData[currentQuest].correctAnswer === true" class="h1 px-1 font-weight-bold lay-color-orange">
               VERDADEIRO!
             </h4>
-            <h4 v-else class="h1 px-4 font-weight-bold lay-color-orange">
+            <h4 v-else class="h1 px-1 font-weight-bold lay-color-orange">
               FALSO!
             </h4>
-            <p v-html="quizData[currentQuest].feedback" class="lay-color-light-gray mx-1 mx-md-4 mb-4"></p>
+            <p v-html="quizData[currentQuest].feedback" class="lay-color-light-gray mx-1 mx-md-4 mb-2 mb-md-4"></p>
             <button class="btn btn-default-orange-button-arrow lay-color-black c-magnetic quiz-btn-next" ref="refBtnNext"
             @click="nextQuestion()"
             v-html="currentQuest < (quizData.length - 1) ? 'Próximo' : 'Concluir'"></button>
           </div>
         </div>
       </div>
-      <div class="quiz-answer-btns pl-5 pr-5 pb-5" ref="refBtnsAnswer">
+      <div class="quiz-answer-btns pl-3 pl-md-5 pr-3 pr-md-5 pb-3 pb-md-5" ref="refBtnsAnswer">
         <div class="row no-gutters">
-          <div class="col-6 pr-4">
+          <div class="col-6 pr-2 pr-md-4">
             <button class="btn btn-default-orange lay-color-black c-magnetic w-100 btn-answer-quiz px-1" 
             :class="quizData[currentQuest].answer === true ? 'active' : ''"
             @click="answerQuestion(true)">
               Verdadeiro
             </button>
           </div>
-          <div class="col-6 pl-4">
+          <div class="col-6 pl-2 pl-md-4">
             <button class="btn btn-default-orange lay-color-black c-magnetic w-100 btn-answer-quiz px-1" 
             :class="quizData[currentQuest].answer === false ? 'active' : ''"
             @click="answerQuestion(false)">
@@ -56,21 +56,16 @@
         </div>
       </div>
       <div class="quiz-endfeedback-box" ref="refEndFeedback">
-        <div class="w-100 h-100 d-flex align-items-center p-5" style="overflow: scroll;" v-if="completed">
-          <div class="w-100" v-if="getScore() > (quizData.length - 3)">
-            <h3 class="lay-color-orange m-0">
-              Parabéns
-            </h3>
+        <div class="w-100 h-100 d-flex align-items-center p-3 p-md-5" v-if="completed">
+          <div class="w-100" v-if="getScore() >= 4 ">
+            <h1 class="lay-color-orange">
+              Parabéns!
+            </h1>
             <p class="mb-3">
               Você acertou <b class="lay-color-orange">{{ getScore() }}</b> de <b class="lay-color-orange">{{quizData.length}}</b>
             </p>
-            <h3 class="h1 font-weight-bold">
-              Você é <br>
-              um expert <br>
-              em vacinas!
-            </h3>
             <p class="lay-color-light-gray">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt uta.
+              Parece que você está imunizado contra as Fake News!! Agora que desvendamos alguns dos mitos e verdades sobre as vacinas, que tal aprender um pouco mais do tema? Confira todos os nossos conteúdos.
             </p>
             <p class="lay-color-light-gray">
               Compartilhe
@@ -105,19 +100,32 @@
               <span class="icomoon-reload"></span> Jogar novamente
             </a>
           </div>
-          <div class="w-100" v-else>
-            <h3 class="lay-color-orange m-0">
-              Sinto muito...
-            </h3>
+          <div class="w-100" v-else-if="getScore() > 1 && getScore() < 4">
+            <h1 class="lay-color-orange">
+              Você está <br>
+              quase la!
+            </h1>
             <p class="mb-3">
-              Você acertou apenas <b class="lay-color-orange">{{ getScore() }}</b> de <b class="lay-color-orange">{{quizData.length}}</b>
+              Você acertou <b class="lay-color-orange">{{ getScore() }}</b> de <b class="lay-color-orange">{{quizData.length}}</b>
             </p>
-            <h3 class="h1 font-weight-bold">
-              Mas não <br>
-              fique triste!<br>
-            </h3>
             <p class="lay-color-light-gray">
-              Começe novamente e use seus novos conhecimentos para se tornar um expert em vacinas.
+              É verdade que muitas informações falsas sobre vacinas circulam por aí mas nunca é tarde para entender o que é verdade e o que é mentira. Você está quase lá, vamos aprender um pouco mais? Confira todos os nossos conteúdos.
+            </p>
+            <a v-on:click.prevent.stop="restartQuiz()" class="lay-color-light-gray text-decoration-none">
+              <span class="icomoon-reload"></span> Jogar novamente
+            </a>
+          </div>
+          <div class="w-100" v-else>
+            <h1 class="lay-color-orange">
+              A hora de <br>
+              aprender <br>
+              é agora! 
+            </h1>
+            <p class="mb-3">
+              Você acertou <b class="lay-color-orange">{{ getScore() }}</b> de <b class="lay-color-orange">{{quizData.length}}</b>
+            </p>
+            <p class="lay-color-light-gray">
+              É verdade que muitas informações falsas sobre vacinas circulam por aí mas nunca é tarde para entender o que é verdade e o que é mentira. Agora que você já sabe alguns mitos, que tal aprender um pouco mais?
             </p>
             <a v-on:click.prevent.stop="restartQuiz()" class="lay-color-light-gray text-decoration-none">
               <span class="icomoon-reload"></span> Jogar novamente
@@ -342,7 +350,8 @@
         opacity: 0
 
       .quiz-question-box
-        height: calc(100% - 90px)
+        --footerHeight: 90px
+        height: calc(100% - var(--footerHeight))
       
       .quiz-feedback-box,
       .quiz-endfeedback-box
@@ -429,5 +438,12 @@
       &::before
         display: none
   @include media-breakpoint-down(xs)
+    .c-quiz
+      .quiz-container
+        min-height: 450px
+        .quiz-question-box
+          --footerHeight: 60px
+      .quiz-font-title
+        font-size: 22px !important
 
 </style>

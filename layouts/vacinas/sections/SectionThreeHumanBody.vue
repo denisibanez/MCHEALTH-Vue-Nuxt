@@ -1,6 +1,6 @@
 <template>
   <div class="c-section-three lay-bg-black overflow-hidden">
-    <div class="w-100 py-5">
+    <div class="w-100 pt-5">
       <div class="container">
         <div class="row no-gutters">
           <div class="col-12">
@@ -37,36 +37,11 @@
         </div>
       </div>
     </div>
-    <div class="w-100 py-5">
+    <div class="w-100 pb-5 pb-md-6 pb-lg-8">
       <div class="container">
         <div class="row justify-content-center">
-          <div class="col-11 box-detailed-right-top p-0">
-            <span class="detail"></span>
-            <div class="content overflow-hidden rounded">
-              <div class="row no-gutters">
-                <div class="col-md-8">
-                  <VimeoPlayer :url="'407983251/b49f27b667'" />
-                </div>
-                <div class="col-md-4 p-4">
-                  <div class="w-100 h-100 tv-sidebar">
-                    <div class="tv-sidebar-title">
-                      <h5 class="h4 font-weight-bold lay-color-orange">
-                        VIDEOS
-                      </h5>
-                    </div>
-                    <div class="tv-sidebar-video">
-                      Lorem ipsum dolor sit amet consectetur
-                    </div>
-                    <div class="tv-sidebar-video">
-                      Lorem ipsum dolor sit amet consectetur
-                    </div>
-                    <div class="tv-sidebar-video">
-                      Lorem ipsum dolor sit amet consectetur
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="col-lg-11">
+            <VimeoPlaylist :playlistData="playlistData" />
           </div>
         </div>
       </div>
@@ -75,14 +50,14 @@
 </template>
 
 <script>
-  import ThreeHumanBody from "./ThreeHumanBody";
-  import VimeoPlayer from "./VimeoPlayer";
+  import ThreeHumanBody from "./../ThreeHumanBody";
+  import VimeoPlaylist from "./../VimeoPlaylist";
 
   export default {
     name: 'SectionThreeHumanBody',
     components: {
       ThreeHumanBody,
-      VimeoPlayer,
+      VimeoPlaylist,
     },
     data: function() {
       return {
@@ -90,20 +65,30 @@
           width: 1000,
           height: 562,
         },
+        playlistData: [ 
+          {
+            title: "<b class='lay-color-orange'>JUAREZ CUNHA</b><br><small>Médico Pediatra e Presidente da Sociedade Brasileira de Imunização</small>",
+            vimeoID: "190613094",
+            thumb: "vacinas/video-thumbs/thumb-01.png",
+          },
+          {
+           title: "<b class='lay-color-orange'>HELDER KAKAUA</b><br><small>Prof. PHD e Pesquisador Biologia Molecular USP</small>",
+            vimeoID: "188284379",
+            thumb: "vacinas/video-thumbs/thumb-02.png",
+          },
+          {
+            title: "<b class='lay-color-orange'>LEONARDO HILÁRIO</b><br><small>Engenheiro de Computação</small>",
+            vimeoID: "184694770",
+            thumb: "vacinas/video-thumbs/thumb-03.png",
+          },
+        ],
       }
     },
     methods: {
-      updateCanvasSize: function () {
-        this.threeSizes.width = this.$refs.refThree.clientWidth;
-        this.threeSizes.height = this.$refs.refThree.clientHeight;
-      }
+
     },
     mounted: function() {
-      // this.updateCanvasSize();
-    },
-    transition: {
-      name: 'transition',
-      mode: 'out-in'
+      
     }
   }
 </script>
@@ -114,17 +99,6 @@
   @import '~assets/sass/basics/bootstrap-override'
   @import '~bootstrap/scss/mixins'
   @import '~assets/sass/variables'
-
-  .transition-enter-active, 
-  .transition-leave-active
-    transition: opacity .4s ease-out 
-
-  .transition-enter, 
-  .transition-leave-active
-    opacity: 0
-
-  .c-vacinas
-    background-color: #1B1E21
 
   .container-video-human-body
     position: relative
@@ -180,75 +154,6 @@
             background: linear-gradient(270deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
           &::after
             background: linear-gradient(90deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
-
-  .tv-sidebar
-    display: -ms-flexbox
-    display: -webkit-flex
-    display: flex
-    -webkit-flex-direction: column
-    -ms-flex-direction: column
-    flex-direction: column
-    -webkit-flex-wrap: nowrap
-    -ms-flex-wrap: nowrap
-    flex-wrap: nowrap
-    -webkit-justify-content: flex-start
-    -ms-flex-pack: start
-    justify-content: flex-start
-    -webkit-align-content: stretch
-    -ms-flex-line-pack: stretch
-    align-content: stretch
-    -webkit-align-items: center
-    -ms-flex-align: center
-    align-items: center
-
-    .tv-sidebar-title
-      -webkit-order: 0
-      -ms-flex-order: 0
-      order: 0
-      -webkit-flex: 0 1 auto
-      -ms-flex: 0 1 auto
-      flex: 0 1 auto
-      -webkit-align-self: flex-start
-      -ms-flex-item-align: start
-      align-self: flex-start
-
-    .tv-sidebar-video:nth-child(2)
-      -webkit-order: 0
-      -ms-flex-order: 0
-      order: 0
-      -webkit-flex: 1 1 auto
-      -ms-flex: 1 1 auto
-      flex: 1 1 auto
-      -webkit-align-self: center
-      -ms-flex-item-align: center
-      align-self: center
-      width: 100%
-
-    .tv-sidebar-video:nth-child(3)
-      -webkit-order: 0
-      -ms-flex-order: 0
-      order: 0
-      -webkit-flex: 1 1 auto
-      -ms-flex: 1 1 auto
-      flex: 1 1 auto
-      -webkit-align-self: center
-      -ms-flex-item-align: center
-      align-self: center
-      width: 100%
-
-    .tv-sidebar-video:nth-child(4)
-      -webkit-order: 0
-      -ms-flex-order: 0
-      order: 0
-      -webkit-flex: 1 1 auto
-      -ms-flex: 1 1 auto
-      flex: 1 1 auto
-      -webkit-align-self: center
-      -ms-flex-item-align: center
-      align-self: center
-      width: 100%
-
-
 
   @include media-breakpoint-down(lg)
 

@@ -65,3 +65,16 @@
       &::before
         right: 5px
         top: 5px
+
+@include media-breakpoint-down(lg)
+
+@include media-breakpoint-down(md)
+
+@include media-breakpoint-down(sm)
+  
+@include media-breakpoint-down(xs)
+  [class*="box-detailed"]
+    .detail
+      &::before
+        width: 150px
+        height: 150px

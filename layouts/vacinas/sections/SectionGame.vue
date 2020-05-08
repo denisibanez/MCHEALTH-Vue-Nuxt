@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import Game from "../../layouts/vacinas/Game";
+  import Game from "../../../layouts/vacinas/Game";
 
   export default {
     name: 'SectionGame',
