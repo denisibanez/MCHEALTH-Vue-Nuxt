@@ -1,0 +1,71 @@
+
+@function rem($pixel)
+  @return $pixel / 16 + rem
+
+#page
+  width: 100%
+  height: 100%
+
+.c-cursor
+  pointer-events: none
+  // html:not(.is-desktop) &
+  //   display: none
+
+  .c-cursor__pointer
+    height: rem(26)
+    left: rem(-13)
+    opacity: 0
+    position: fixed
+    top: rem(-13)
+    width: rem(26)
+    z-index: 50
+    mix-blend-mode: difference
+    .point
+      display: block
+      content: " "
+      position: absolute
+      width: 100%
+      height: 100%
+      left: 0
+      top: 0
+      border: 1px solid
+      border-color: map-get($color-config, "orange")
+      border-radius: 50%
+      transition: all 1s cubic-bezier(0.165, 0.840, 0.440, 1.000)
+    .is-hover &
+      .point
+        transform: scale(2)
+    .hide-cursor:not(.is-hover) &
+      .point
+        transform: scale(0)
+        opacity: 0
+
+  .c-cursor__pointer__dot
+    height: rem(8)
+    left: rem(-4)
+    opacity: 0
+    position: fixed
+    top: rem(-4)
+    width: rem(8)
+    z-index: 50
+    mix-blend-mode: difference
+    .point
+      display: block
+      content: " "
+      position: absolute
+      width: 100%
+      height: 100%
+      left: 0
+      top: 0
+      background-color: map-get($color-config, "orange")
+      border-radius: 50%
+      transition: all 0.3s cubic-bezier(0.165, 0.840, 0.440, 1.000)
+    .hide-cursor:not(.is-hover) &
+      .point
+        transform: scale(0)
+        opacity: 0
+
+.c-magnetic
+  span
+    display: inline-block
+    pointer-events: none

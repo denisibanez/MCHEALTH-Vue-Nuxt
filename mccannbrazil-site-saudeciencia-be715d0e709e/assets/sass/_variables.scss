@@ -1,0 +1,33 @@
+// ==========================================================================
+// Theme Custom Variables
+// ==========================================================================
+
+// Delete "white" and "black" and add every main colors from your theme.
+// To apply the color as 'color text', add the class "lay-color-[colorname]" to HTML element.
+// To apply the color as 'background color', add the class "lay-bg-[colorname]" to HTML element.
+$color-config:(		"dark-blue": 	#1b1e21,
+									"darker": 		#1b1e21,
+									"black": 			#0d0e0f, 
+									"light-gray": #b2b2b2,
+									"orange": 		#ea9b1c,
+									"blue": 			#448CCB,
+									"red": 				#de4648,
+									"codgray":		#1A1A1A,
+);
+
+// Some predefined spacers. Each value is for a specific screen size (bootstrap), see below.
+// To apply the spacer, add <span class="spacer-[spacername]"></span> in your HTML file.
+// 								NAME 		XL 				LG 				MD 			SM			XS 			
+$spacer-config: 	"lg" 		300px 		280px 		250px		225px		200px, 
+									"md" 		200px 		180px 		150px		125px		100px, 
+									"sm" 		100px 		80px 			50px		25px		15px,
+									"xs" 		50px 			40px 			30px		20px		10px;
+
+// Some predefined font-sizes. Each value is for a specific screen size (bootstrap), see below.
+// To apply the font-size, add the class "font-[fontsizename]" to HTML element.
+// 									NAME 		XL 			LG 			MD 			SM			XS
+$fontsize-config: 	"xl" 		5rem 		4rem 		3.5rem	3rem		3rem, 
+										"lg" 		3rem 		2.5rem 	2.2rem	2.1rem	2rem,
+										"md" 		25px 		20px 		17px		15px		15px,
+										"sm" 		16px 		16px 		15px		14px		14px,
+			"header-featured" 		1.9rem 	1.8rem 	1.5rem	1.1rem	.9rem;
