@@ -1,6 +1,4 @@
 
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 export default {
   mode: 'universal',
   /*
