@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <GmapMap
+        <google-map
           ref="gmap"
           :center="getCenter()"
           :zoom="11"
@@ -20,23 +20,13 @@
             :icon="m.icon"
             @click="clicked()"
           />
-        </GmapMap>
+        </google-map>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import * as VueGoogleMaps from 'vue2-google-maps'
-
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: 'YOUR_API_TOKEN',
-  },
-  installComponents: true
-})
-
 export default {
   name: 'maps',
 
@@ -76,32 +66,33 @@ export default {
         { lat: 37.9768368, lng: -122.016978 },
         { lat: 37.9868369, lng: -122.196979 }
       ];
-      for(let i=0;i<tempLatLong.length;i++){
+      tempLatLong.map((item, i) => {
         markers.push({
-            position: tempLatLong[i],
-            title: 'test title',
-            icon: this.getSiteIcon(1)    // if you want to show different as per the condition.         
-          });
-      }
+          position: item[i],
+          title: 'test title',
+          icon: this.getSiteIcon(1)    // if you want to show different as per the condition.         
+        });
+      })
+      
       return markers;      
     },
     getSiteIcon(status) {
       try {
         switch (status) {
           case 1:
-            return require("@/assets/images/icons/map-marker-online.svg");
+            // return require("@/assets/images/icons/map-marker-online.svg");
             break;
           case 2:
-            return require("@/assets/images/icons/map-marker-critical.svg");
+            // return require("@/assets/images/icons/map-marker-critical.svg");
             break;
           case 3:
-            return require("@/assets/images/icons/map-marker-offline.svg");
+            // return require("@/assets/images/icons/map-marker-offline.svg");
             break;
           case 4:
-            return require("@/assets/images/icons/map-marker-lifesafety.svg");
+            // return require("@/assets/images/icons/map-marker-lifesafety.svg");
             break;
           default:
-            return require("@/assets/images/icons/map-marker-online.svg");
+            // return require("@/assets/images/icons/map-marker-online.svg");
         }
       } catch (e) {
         return null;

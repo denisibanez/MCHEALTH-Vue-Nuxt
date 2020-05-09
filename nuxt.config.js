@@ -1,4 +1,3 @@
-
 export default {
   mode: 'universal',
   /*
@@ -44,7 +43,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    // { src: `~plugins/vimeo-player`, ssr: false }
+    '@plugins/vue-maps.js'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -113,7 +112,8 @@ export default {
     },
     transpile: [
       "gsap",
-      "three"
+      "three",
+      "vue2-google-maps"
     ],
     filenames:{
       app: ({ isDev }) => isDev ? '[name].js' : '[contenthash].js',
