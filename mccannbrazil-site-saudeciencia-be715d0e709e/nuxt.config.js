@@ -1,4 +1,6 @@
 
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 export default {
   mode: 'universal',
   /*
@@ -50,17 +52,59 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    '@aceforth/nuxt-optimized-images',
   ],
+  optimizedImages: {
+    optimizeImages: true
+  },
   /*
   ** Nuxt.js modules
   */
   modules: [
+    'nuxt-lazy-load',
+    [
+      "nuxt-compress",
+      {
+        gzip: {
+          cache: true
+        },
+        brotli: {
+          threshold: 10240
+        }
+      }
+    ]
   ],
   /*
   ** Build configuration
   */
   build: {
+    extractCSS: true,
+    sourceMap: false,
+    layouts: false,
+    pages: true,
+    commons: true,
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        automaticNameDelimiter: '.',
+        name: undefined,
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.(css|vue)$/,
+            chunks: 'all',
+            enforce: true
+          }
+        },
+        minSize: 51200,
+        maxSize: 51200,
+      }
+    },
     vendor: [
+      'three',
+      'bootstrap',
+      'gsap',
+      'jquery'
     ],
     postcss: {
       preset: {
@@ -73,10 +117,34 @@ export default {
       "gsap",
       "three"
     ],
+    filenames:{
+      app: ({ isDev }) => isDev ? '[name].js' : '[contenthash].js',
+      chunk: ({ isDev }) => isDev ? '[name].js' : '[contenthash].js',
+      css: ({ isDev }) => isDev ? '[name].css' : '[contenthash].css',
+      img: ({ isDev }) => isDev ? '[path][name].[ext]' : 'img/[contenthash:7].[ext]',
+      font: ({ isDev }) => isDev ? '[path][name].[ext]' : 'fonts/[contenthash:7].[ext]',
+      video: ({ isDev }) => isDev ? '[path][name].[ext]' : 'videos/[contenthash:7].[ext]'
+    },
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend (config, { isClient }) {
+      if (isClient) {
+        config.optimization.splitChunks.maxSize = 51200;
+      }
+
+      const imagemin = require('imagemin');
+      const imageminPngquant = require('imagemin-pngquant');
+      
+      (async () => {
+          await imagemin(['images/*.png'], 'build/images', {
+              plugins: [
+                  imageminPngquant()
+              ]
+          });
+      
+          console.log('Images optimized');
+      })();
     }
   }
 }

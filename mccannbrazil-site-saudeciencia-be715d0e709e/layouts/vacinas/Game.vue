@@ -18,17 +18,17 @@
         </div>
         <div class="col-6 pl-3 box-scoreboard lay-color-light-gray">
           <p class="mb-1 small d-flex align-items-center">
-            <img class="icon-face mr-1" src="~/assets/images/vacinas/game-face-imune.svg" alt="Imunizados"> 
+            <img class="icon-face mr-1" data-src="~/assets/images/vacinas/game-face-imune.svg" alt="Imunizados" v-lazy-load> 
             <span class="game-border-dotted-yellow">Imunizados:</span> 
             <b class="game-color-yellow w-100 score-percent text-right game-border-dotted-yellow">{{score.imune}}%</b>
           </p>
           <p class="mb-1 small d-flex align-items-center">
-            <img class="icon-face mr-1" src="~/assets/images/vacinas/game-face-healthy.svg" alt="Neutro"> 
+            <img class="icon-face mr-1" data-src="~/assets/images/vacinas/game-face-healthy.svg" alt="Neutro" v-lazy-load> 
             <span class="game-border-dotted-blue">Neutro:</span> 
             <b class="game-color-blue w-100 score-percent text-right game-border-dotted-blue">{{score.healthy}}%</b>
           </p>
           <p class="mb-0 small d-flex align-items-center">
-            <img class="icon-face mr-1" src="~/assets/images/vacinas/game-face-sick.svg" alt="Doentes"> 
+            <img class="icon-face mr-1" data-src="~/assets/images/vacinas/game-face-sick.svg" alt="Doentes" v-lazy-load> 
             <span class="game-border-dotted-red">Doentes:</span> 
             <b class="game-color-red w-100 score-percent text-right game-border-dotted-red">{{score.sick}}%</b>
           </p>

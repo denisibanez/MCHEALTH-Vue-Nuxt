@@ -15,7 +15,8 @@
             <div class="slide__image-wrapper">
               <img 
                 class="slide__image"
-                :src="require('@/assets/images/' + slide.imgName)"
+                :data-src="require('@/assets/images/' + slide.imgName)"
+                v-lazy-load
               />
             </div>
             <article class="slide__content">
