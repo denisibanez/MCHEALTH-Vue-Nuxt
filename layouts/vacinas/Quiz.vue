@@ -276,8 +276,6 @@
 
       TweenLite.to(refQuestion, .5, { opacity: 1, display: 'block'});
       TweenLite.to(refBtnsAnswer, .5, { opacity: 1, display: 'block', scale: 1});
-
-      console.log(this.quizData.length);
     },
   }
 </script>

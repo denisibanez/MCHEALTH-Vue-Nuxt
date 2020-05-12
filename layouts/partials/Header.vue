@@ -69,6 +69,7 @@
     position: relative
     z-index: 5
     opacity: 0
+    background-color: map-get($color-config, "dark-blue")
     .row
       height: 90px 
   .header-logo 

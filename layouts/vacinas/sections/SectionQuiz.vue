@@ -106,6 +106,7 @@
   .c-section-quiz
     position: relative
     overflow: hidden
+
     .background-effect
       position: absolute
       width: 105%

@@ -3,6 +3,7 @@
     <BannerTrendsSearches :bannerData="bannerTrendsData" />
     <SectionThreeHumanBody />
     <SectionQuiz />
+    <SectionCarouselCards />
     <SectionGame />
   </div>
 </template>
@@ -10,15 +11,17 @@
 <script>
   import BannerTrendsSearches from "../../layouts/vacinas/BannerTrendsSearches";
   import SectionThreeHumanBody from "../../layouts/vacinas/sections/SectionThreeHumanBody";
-  import SectionGame from "../../layouts/vacinas/sections/SectionGame";
   import SectionQuiz from "../../layouts/vacinas/sections/SectionQuiz";
+  import SectionCarouselCards from "../../layouts/vacinas/sections/SectionCarouselCards";
+  import SectionGame from "../../layouts/vacinas/sections/SectionGame";
 
   export default {
     components: {
       BannerTrendsSearches,
       SectionThreeHumanBody,
-      SectionGame,
       SectionQuiz,
+      SectionCarouselCards,
+      SectionGame,
     },
     data: function() {
       return {
@@ -83,8 +86,7 @@
     opacity: 0
 
   .c-vacinas
-    background-color: #1B1E21
-
+    
   @include media-breakpoint-down(lg)
 
   @include media-breakpoint-down(md)

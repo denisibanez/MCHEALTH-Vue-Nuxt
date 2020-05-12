@@ -100,60 +100,62 @@
   @import '~bootstrap/scss/mixins'
   @import '~assets/sass/variables'
 
-  .container-video-human-body
-    position: relative
-
-    *
+  .c-section-three
+    .container-video-human-body
       position: relative
-      z-index: 10
 
-    #container-video
-      --width: 1000px
-      --height: calc((var(--width) / 16) * 9)
-      position: absolute
-      top: 50%
-      z-index: 5
-      margin-top: calc((var(--height) / 2) * -1)
-      right: calc((var(--width) / 5) * -1)
-      width: var(--width)
-      height: var(--height)
-
-      #hidden-frame
-        display: block
-        content: " "
-        position: absolute
-        top: 0
-        left: 0
+      *
+        position: relative
         z-index: 10
 
-        [class*="helper--"]
+      #container-video
+        --width: 1000px
+        --height: calc((var(--width) / 16) * 9)
+        position: absolute
+        top: 50%
+        z-index: 5
+        margin-top: calc((var(--height) / 2) * -1)
+        right: calc((var(--width) / 5) * -1)
+        width: var(--width)
+        height: var(--height)
+
+        #hidden-frame
+          display: block
+          content: " "
           position: absolute
-          width: 100% 
-          height: 100% 
+          top: 0
+          left: 0
+          z-index: 10
 
-          &::after,
-          &::before
-            opacity: .5
+          [class*="helper--"]
             position: absolute
-            display: block
-            content: " "
-            width: 100%
-            height: 100%
-            top: 0
-            left: 0
+            width: 100% 
+            height: 100% 
 
-        .helper--1
-          &::before
-            background: linear-gradient(0deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
-          &::after
-            opacity: 1
-            background: linear-gradient(180deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
+            &::after,
+            &::before
+              opacity: .5
+              position: absolute
+              display: block
+              content: " "
+              width: 100%
+              height: 100%
+              top: 0
+              left: 0
 
-        .helper--2
-          &::before
-            background: linear-gradient(270deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
-          &::after
-            background: linear-gradient(90deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
+          .helper--1
+            &::before
+              background: linear-gradient(0deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
+            &::after
+              opacity: 1
+              background: linear-gradient(180deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
+
+          .helper--2
+            &::before
+              background: linear-gradient(270deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
+            &::after
+              background: linear-gradient(90deg, rgba(13,14,15,0) 0%, rgba(13,14,15,1) 100%)
+
 
   @include media-breakpoint-down(lg)
 
