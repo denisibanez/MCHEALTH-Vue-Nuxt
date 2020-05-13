@@ -24,16 +24,36 @@
           class="no-padding"
           :options="getOptions"
         >
-          <GmapMarker
-            :key="index"
-            v-for="(m, index) in places"
-            :position="m.position"
-            :clickable="true"
-            :draggable="true"
-            :title="m.title"
-            :icon="m.icon"
-            @click="clicked()"
-          />
+          <google-map-cluster>
+            <gmap-info-window
+              :options="infoOptions"
+              :position="infoWindowPos"
+              :opened="infoWinOpen"
+              @closeclick="infoWinOpen=false">
+              <div class="row">
+                <div class="col-md-12">
+                  <h3>{{ infoContent.title }}</h3>
+                  <p>
+                    <a
+                      :href="infoContent.urlMaps">
+                       Acesse no Google  
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </gmap-info-window>
+
+            <GmapMarker
+              :key="index"
+              v-for="(m, index) in places"
+              :position="m.position"
+              :clickable="true"
+              :draggable="true"
+              :title="m.title"
+              :icon="m.icon"
+              @click="toggleInfoWindow(m, index)"
+            />
+          </google-map-cluster>  
         </google-map>
       </div>
     </div>
@@ -48,6 +68,7 @@ export default {
     return {
       currentPlace: null,
       places: [],
+      oldValue: null,
       center: { 
         lat: -23.533773, lng: -46.625290 
       },
@@ -59,7 +80,17 @@ export default {
         rotateControl: true,
         fullscreenControl: true,
         disableDefaultUi: true
-      }
+      },
+      infoContent: '',
+      infoWindowPos: null,
+      infoWinOpen: false,
+      currentMidx: null,
+      infoOptions: {
+        pixelOffset: {
+        width: 0,
+        height: -35
+        }
+      },
     }
   },
 
@@ -80,6 +111,7 @@ export default {
   
     setPlace(place) {
       this.currentPlace = place;
+      this.places = []
       this.setMyLocation()
       // tratar endereço aqui
       // verificar se tem lat long
@@ -92,29 +124,31 @@ export default {
     setMyLocation() {
       this.places.push({
         position:  this.currentPlace.meulocallatlong, // integrar com valor retornado do auto complete
-        title: 'HomMeu Local',
+        title: 'Home Meu Local',
         icon: this.getSiteIcon(1) // escolhe o icone especifico
       })     
     },
 
     getMarkers() {
       // remove this after lat long received from api.
+      this.places = []
       const tempLatLong = [
         { lat: -23.5629, lng: -46.6544 },
         { lat: -23.5533, lng: -46.6597 },
+        { lat: 	-23.5981, lng: -46.7201 },
+        { lat: -23.5227, lng:  -46.7104 },
       ];
 
       tempLatLong.map((item, i) => {
         this.places.push({
           position: item,
-          title: 'test title',
+          title: 'Posto do fim do mundo',
           icon: null         
         });
       })
-      
-      console.log(this.places)
-      // Se for fazer tracking de rota
-      // this.getRoute()
+
+      // depois da uintegração tratar só fazer route se for diferente de my locatio
+      this.getRoute()
     },
     
     getSiteIcon(status) {
@@ -135,26 +169,43 @@ export default {
     },
 
     getRoute() {
+      const origin =  { lat: this.places[0].position.lat, lng: this.places[0].position.lng }
+      const destiny =  { lat: this.places[1].position.lat, lng: this.places[1].position.lng }
+      const _self = this
+    
       this.directionsService = new google.maps.DirectionsService()
       this.directionsDisplay = new google.maps.DirectionsRenderer()
       this.directionsDisplay.setMap(this.$refs.gmap.$mapObject)
-      var vm = this
-      vm.directionsService.route({
-        origin:  new google.maps.LatLng(-23.5666, -46.703), // Can be coord or also a search query
-        destination:  new google.maps.LatLng(-23.5629, -46.6544),
+      _self.directionsService.route({
+        origin:  new google.maps.LatLng(origin.lat, origin.lng),
+        destination:  new google.maps.LatLng(destiny.lat, destiny.lng),
         travelMode: 'DRIVING'
       }, function (response, status) {
         if (status === 'OK') {
-          vm.directionsDisplay.setDirections(response) // draws the polygon to the map
+          _self.directionsDisplay.setDirections(response)
+          _self.directionsDisplay.setOptions( { suppressMarkers: true } );
         } else {
           console.log('Directions request failed due to ' + status)
         }
       })
     },
 
-    clicked() {
-     // after click
-    },
+    toggleInfoWindow(marker, idx) {
+      console.log(marker)
+      this.infoWindowPos = marker.position;
+      this.infoContent = {
+        title:marker.title,
+        urlMaps: `https://www.google.com/maps/?q=${marker.position.lat},${marker.position.lng}`
+      };
+
+      if (this.currentMidx == idx) {
+        this.infoWinOpen = !this.infoWinOpen;
+      }
+      else {
+        this.infoWinOpen = true;
+        this.currentMidx = idx;
+      }
+    }
   },
 }
 </script>
