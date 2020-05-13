@@ -30,16 +30,14 @@
               :position="infoWindowPos"
               :opened="infoWinOpen"
               @closeclick="infoWinOpen=false">
-              <div class="row">
-                <div class="col-md-12">
-                  <h3>{{ infoContent.title }}</h3>
-                  <p>
-                    <a
-                      :href="infoContent.urlMaps">
-                       Acesse no Google  
-                    </a>
-                  </p>
-                </div>
+              <div style="width: 300px; padding: 15px;">
+                <p>{{ infoContent.title }}</p>
+                <p>
+                  <a
+                    :href="infoContent.urlMaps">
+                      Acesse no Google  
+                  </a>
+                </p>
               </div>
             </gmap-info-window>
 
@@ -210,7 +208,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .maps-wrapper {
   padding-top:60px;
   padding-bottom: 25px;
@@ -251,6 +249,28 @@ export default {
 
   .nowrap {
     flex-wrap: nowrap;
+  }
+
+  .gm-style-iw-t{
+    color: #0d0e0f;
+    h3 {
+      font-size: 18px;
+      text-transform: uppercase;
+    }
+    
+    p{
+      color: #0d0e0f;
+
+      a {
+       font-size: 16px;
+       color:#ea9b1c;
+      }
+    }  
+
+    .fechar {
+      font-size:15px;
+      color: #0d0e0f;
+    }
   }
 }
 </style>
