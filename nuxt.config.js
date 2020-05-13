@@ -28,7 +28,7 @@ export default {
       { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon/favicon-32x32.png' },
       { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon/favicon-96x96.png' },
       { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon/favicon-16x16.png' },
-    ]
+    ],
   },
   /*
   ** Customize the progress-bar color
@@ -43,7 +43,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@plugins/vue-maps.js'
+    '@plugins/vue-maps.js',
   ],
   /*
   ** Nuxt.js dev-modules
@@ -113,7 +113,7 @@ export default {
     transpile: [
       "gsap",
       "three",
-      "vue2-google-maps"
+      "vue2-google-maps",
     ],
     filenames:{
       app: ({ isDev }) => isDev ? '[name].js' : '[contenthash].js',

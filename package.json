@@ -30,6 +30,7 @@
     "sharp": "^0.25.2",
     "sqip-loader": "^1.0.0",
     "three": "^0.115.0",
+    "vue-google-autocomplete": "^1.1.0",
     "vue-social-sharing": "^2.4.7",
     "vue2-google-maps": "^0.10.7",
     "webp-loader": "^0.6.0"
