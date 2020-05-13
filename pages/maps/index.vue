@@ -90,7 +90,7 @@ export default {
     },
 
     setMyLocation() {
-      this.place.push({
+      this.places.push({
         position:  this.currentPlace.meulocallatlong, // integrar com valor retornado do auto complete
         title: 'HomMeu Local',
         icon: this.getSiteIcon(1) // escolhe o icone especifico
