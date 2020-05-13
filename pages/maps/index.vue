@@ -4,7 +4,8 @@
       <div class="col-md-12">
         <div id="autocompleteInput" class="d-flex nowrap justify-content-center">
           <gmap-autocomplete
-            @place_changed="setPlace">
+            @place_changed="setPlace"
+            :placeholder="'Digite seu endereço completo'">
           </gmap-autocomplete>
           <a
             class="autocompleteButton"
@@ -108,6 +109,7 @@ export default {
     },
   
     setPlace(place) {
+      console.log(place)
       this.currentPlace = place;
       this.places = []
       this.setMyLocation()
@@ -267,9 +269,13 @@ export default {
       }
     }  
 
-    .fechar {
-      font-size:15px;
-      color: #0d0e0f;
+    .gm-ui-hover-effect {
+      img {
+        width: 20px !important;
+        height: 20px !important;
+        margin-left: 0px !important;
+        margin-top: 10px !important;
+      }
     }
   }
 }
