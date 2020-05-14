@@ -5,6 +5,7 @@
     <SectionQuiz />
     <SectionCarouselCards />
     <SectionGame />
+    <SectionCardsModal />
   </div>
 </template>
 
@@ -14,6 +15,7 @@
   import SectionQuiz from "../../layouts/vacinas/sections/SectionQuiz";
   import SectionCarouselCards from "../../layouts/vacinas/sections/SectionCarouselCards";
   import SectionGame from "../../layouts/vacinas/sections/SectionGame";
+  import SectionCardsModal from "../../layouts/vacinas/sections/SectionCardsModal";
 
   export default {
     components: {
@@ -22,6 +24,7 @@
       SectionQuiz,
       SectionCarouselCards,
       SectionGame,
+      SectionCardsModal,
     },
     data: function() {
       return {

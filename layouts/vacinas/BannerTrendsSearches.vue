@@ -49,7 +49,7 @@
     </div>
     <div id="effect-overlay">
       <span id="overlay-shadow-frame"></span>
-      <span id="overlay-texture"     :style="{ backgroundImage: 'url(' + require('@/assets/images/vacinas/parallax/layer-texture.png') + ')' }"></span>
+      <span id="overlay-texture"     :style="{ backgroundImage: 'url(' + require('@/assets/images/vacinas/banner/layer-texture.png') + ')' }"></span>
       <span id="overlay-shadow-bottom"></span>
     </div> 
   </div>

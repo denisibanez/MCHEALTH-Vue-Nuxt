@@ -108,9 +108,8 @@
             </a>
           </section>
           <section class="col-9" v-else>
-            <h2 class="game-color-red mb-2 d-flex align-items-center">
-              <!-- <img class="icon-face-md mr-1" src="~/assets/images/vacinas/game-face-sick.svg" alt="Doentes">  -->
-              <span>Sinto muito...</span>
+            <h2 class="game-color-orange mb-2 d-flex align-items-center">
+              <span>Não foi desta vez, que tal tentar de novo...</span>
             </h2>
             <p class="mb-3">A doênca não foi erradicada. Você imunizou somente <strong class="lay-color-orange">{{score.imune}}%</strong> da população.</p>
             <div class="p-3 lay-bg-darker rounded mb-3">
@@ -156,7 +155,7 @@
           },
           infection: {
             initInfected: 2,    // Amount of infected people initially
-            velocity: {         // Amount o frames to spread | 24 = 1s
+            velocityMobile: {   // Amount o frames to spread on mobile devices | 24 = 1s
               axes: {         
                 min: 72,        // 3s
                 max: 120,       // 5s
@@ -164,6 +163,16 @@
               diag:  {
                 min: 120,       // 5s
                 max: 168,       // 7s
+              },
+            }, 
+            velocityDesk: {     // Amount o frames to spread on desktop devices | 24 = 1s
+              axes: {         
+                min: 120,       // 5s
+                max: 168,       // 7s
+              },
+              diag:  {
+                min: 168,       // 7s
+                max: 216,       // 9s
               },
             }, 
             chance: 75          // (Percent) Chance of spreading to each person
@@ -320,22 +329,35 @@
           };
 
           // Randomly choose velocity to spread
-          disease = {
-            top:          this.randomIntFromRange(this.config.infection.velocity.axes.min, this.config.infection.velocity.axes.max),
-            right:        this.randomIntFromRange(this.config.infection.velocity.axes.min, this.config.infection.velocity.axes.max),
-            bottom:       this.randomIntFromRange(this.config.infection.velocity.axes.min, this.config.infection.velocity.axes.max),
-            left:         this.randomIntFromRange(this.config.infection.velocity.axes.min, this.config.infection.velocity.axes.max),
-            topRight:     this.randomIntFromRange(this.config.infection.velocity.diag.min, this.config.infection.velocity.diag.max),
-            bottomRight:  this.randomIntFromRange(this.config.infection.velocity.diag.min, this.config.infection.velocity.diag.max),
-            bottomLeft:   this.randomIntFromRange(this.config.infection.velocity.diag.min, this.config.infection.velocity.diag.max),
-            topLeft:      this.randomIntFromRange(this.config.infection.velocity.diag.min, this.config.infection.velocity.diag.max),
-          };
+          if (document.body.clientWidth >= 100) {
+            disease = {
+              top:          this.randomIntFromRange(this.config.infection.velocityDesk.axes.min, this.config.infection.velocityDesk.axes.max),
+              right:        this.randomIntFromRange(this.config.infection.velocityDesk.axes.min, this.config.infection.velocityDesk.axes.max),
+              bottom:       this.randomIntFromRange(this.config.infection.velocityDesk.axes.min, this.config.infection.velocityDesk.axes.max),
+              left:         this.randomIntFromRange(this.config.infection.velocityDesk.axes.min, this.config.infection.velocityDesk.axes.max),
+              topRight:     this.randomIntFromRange(this.config.infection.velocityDesk.diag.min, this.config.infection.velocityDesk.diag.max),
+              bottomRight:  this.randomIntFromRange(this.config.infection.velocityDesk.diag.min, this.config.infection.velocityDesk.diag.max),
+              bottomLeft:   this.randomIntFromRange(this.config.infection.velocityDesk.diag.min, this.config.infection.velocityDesk.diag.max),
+              topLeft:      this.randomIntFromRange(this.config.infection.velocityDesk.diag.min, this.config.infection.velocityDesk.diag.max),
+            };          
+          } else {
+            disease = {
+              top:          this.randomIntFromRange(this.config.infection.velocityMobile.axes.min, this.config.infection.velocityMobile.axes.max),
+              right:        this.randomIntFromRange(this.config.infection.velocityMobile.axes.min, this.config.infection.velocityMobile.axes.max),
+              bottom:       this.randomIntFromRange(this.config.infection.velocityMobile.axes.min, this.config.infection.velocityMobile.axes.max),
+              left:         this.randomIntFromRange(this.config.infection.velocityMobile.axes.min, this.config.infection.velocityMobile.axes.max),
+              topRight:     this.randomIntFromRange(this.config.infection.velocityMobile.diag.min, this.config.infection.velocityMobile.diag.max),
+              bottomRight:  this.randomIntFromRange(this.config.infection.velocityMobile.diag.min, this.config.infection.velocityMobile.diag.max),
+              bottomLeft:   this.randomIntFromRange(this.config.infection.velocityMobile.diag.min, this.config.infection.velocityMobile.diag.max),
+              topLeft:      this.randomIntFromRange(this.config.infection.velocityMobile.diag.min, this.config.infection.velocityMobile.diag.max),
+            };
+          }
 
           // Infect person if was previously choosed
           if (infected.includes(counter)) {
             status = 3; 
             diseaseArms.top.enabled = true;
-            disease.top = this.config.infection.velocity.axes.min;
+            disease.top = this.config.infection.velocityMobile.axes.min;
           }
 
           // Disabled disease arms for out of the field
@@ -605,7 +627,7 @@
     },
     mounted() {
       // Update Magnetic Cursor Anchors
-      this.$root.$emit('updateCursorListeners');
+      // this.$root.$emit('updateCursorListeners');
 
       if (window.innerWidth < 500) {
         this.width = 300;
@@ -626,6 +648,15 @@
       } else {
         window.onblur = onBlur.bind(this);
       }
+
+      function onResize() {
+        this.init();
+        this.status = 'no-started';
+
+        this.initGame();
+      }
+
+      window.addEventListener("resize", onResize.bind(this));
 
       this.init();
     },

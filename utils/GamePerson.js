@@ -52,7 +52,6 @@ export default class Person {
     }
 
     this.soundInfected =  new Howl({ src: ['/sounds/vacinas/game-infected2.mp3'] });
-
   }
 
   calcDiagonalWaypoints() {
@@ -604,7 +603,7 @@ export default class Person {
     if (this.status === 1) {
       this.status = 3;
       this.calcDiagonalWaypoints();
-      // this.soundInfected.play();
+      this.soundInfected.play();
     }
   }
 }

@@ -54,7 +54,7 @@
         if (event.target.classList.contains('c-magnetic') && this.canEnableMagnetic()) return;
 
         TweenLite.to(this.helpers.cursor, 0.3, { x: this.helpers.mousePosX, y: this.helpers.mousePosY });
-        TweenLite.to(this.helpers.cursor_dot, 0.1, { x: this.helpers.mousePosX, y: this.helpers.mousePosY });
+        TweenLite.to(this.helpers.cursor_dot, 0, { x: this.helpers.mousePosX, y: this.helpers.mousePosY });
 
         document.querySelector('html').classList.remove('hide-cursor');
       },
