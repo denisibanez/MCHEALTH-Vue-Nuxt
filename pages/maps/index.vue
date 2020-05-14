@@ -1,17 +1,19 @@
-<template>
+     <template>
   <div class="container-fluid maps-wrapper">
     <div class="row">
       <div class="col-md-12">
         <div id="autocompleteInput" class="d-flex nowrap justify-content-center">
           <gmap-autocomplete
             @place_changed="setPlace"
+            :options="autoCompleteOptions"
             :placeholder="'Digite seu endereço completo'">
           </gmap-autocomplete>
-          <a
+          <button
             class="autocompleteButton"
-            @click="getMarkers">
+            :disabled="!currentObj"
+            @click="getMarkersClose">
               Buscar
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -31,8 +33,13 @@
               :position="infoWindowPos"
               :opened="infoWinOpen"
               @closeclick="infoWinOpen=false">
-              <div style="width: 300px; padding: 15px;">
-                <p>{{ infoContent.title }}</p>
+              <div style="width: 200px; padding: 15px;">
+                <p class="title">
+                  {{ infoContent.title }}
+                </p>
+                <div
+                  v-html="infoContent.address">
+                </div>
                 <p>
                   <a
                     :href="infoContent.urlMaps">
@@ -60,16 +67,35 @@
 </template>
 
 <script>
+import LocationService from '@/services/maps-service.js'
+
 export default {
   name: 'maps',
 
   data() {
     return {
-      currentPlace: null,
+      baseHost: process.env.VUE_BASE_HOST,
+      currentObj: null,
+      compareItem: { position: { lat: 0 } },
+      currentPlace: {
+        fullAddress: null,
+        coords: {
+          lat: 0,
+          lng: 0
+        }
+      },
+      responsePlaces: [],
       places: [],
       oldValue: null,
       center: { 
         lat: -23.533773, lng: -46.625290 
+      },
+      autoCompleteOptions: {
+        componentRestrictions: {
+          country: [
+            'br',
+          ],
+        },
       },
       getOptions: {
         zoomControl: true,
@@ -93,13 +119,16 @@ export default {
     }
   },
 
+  created() {
+    this.locationService = new LocationService()
+  },
+
   mounted() {
     this.geolocation()
   },
 
   methods: {
     geolocation() {
-      // Seta centro do mapa se estiver habilitado localização no chrome
       navigator.geolocation.getCurrentPosition((position) => {
         this.center = {
           lat: position.coords.latitude,
@@ -107,48 +136,77 @@ export default {
         };
       });
     },
+
+    setPlacesArray(coords, title, icon, address) {
+      this.places.push({
+        position: coords,
+        title: title,
+        icon: icon,
+        address: address
+      })
+      
+      if(this.places.length >= 2) {
+        this.getRoute()
+      } else {
+        this.center = {
+          lat: this.currentPlace.coords.lat,
+          lng: this.currentPlace.coords.lng
+        }
+      }
+    },
   
     setPlace(place) {
-      console.log(place)
-      this.currentPlace = place;
-      this.places = []
-      this.setMyLocation()
-      // tratar endereço aqui
-      // verificar se tem lat long
-      // se não tiver montar a string de busca e imputar numero 1 e buscar de novo
-      // mandar pro back end
-      // com a resposta alimentar o array do mapa no data
-      // this.getMarkers()
+      this.currentObj = place
     },
 
     setMyLocation() {
-      this.places.push({
-        position:  this.currentPlace.meulocallatlong, // integrar com valor retornado do auto complete
-        title: 'Home Meu Local',
-        icon: this.getSiteIcon(1) // escolhe o icone especifico
-      })     
+      this.setPlacesArray(
+        this.currentPlace.coords,
+        'Meu Local',
+        this.getSiteIcon(1),
+        `<div>
+          <p>
+            ${this.currentPlace.fullAddress.formatted_address}
+          </p>
+         </div>   
+        `
+      )
     },
 
-    getMarkers() {
-      // remove this after lat long received from api.
-      this.places = []
-      const tempLatLong = [
-        { lat: -23.5629, lng: -46.6544 },
-        { lat: -23.5533, lng: -46.6597 },
-        { lat: 	-23.5981, lng: -46.7201 },
-        { lat: -23.5227, lng:  -46.7104 },
-      ];
+    getMarkersClose() {
+      this.currentPlace.fullAddress = this.currentObj
+      this.currentPlace.coords.lat =  this.currentObj.geometry.location.lat()
+      this.currentPlace.coords.lng = this.currentObj.geometry.location.lng()
+      const changeOriginPoint = (this.compareItem.position.lat !== this.currentPlace.coords.lat)
+      
+      if(changeOriginPoint) {
+        this.places = []
+        this.setMyLocation()
+        const param = `lat=${this.currentPlace.coords.lat}&lng=${this.currentPlace.coords.lng}`
+        
+        this.locationService.getLocations(param).then((response) => {
+          this.responsePlaces = response.data
+        }).catch((error) => {
+          console.log(error)
+        }).finally(() => {
+          this.getMarkers()
+          this.compareItem.position.lat = this.places[0].position.lat
+        })
+      }
+    },
 
-      tempLatLong.map((item, i) => {
-        this.places.push({
-          position: item,
-          title: 'Posto do fim do mundo',
-          icon: null         
-        });
+    getMarkers() {   
+      this.responsePlaces.map((item, i) => {
+        this.setPlacesArray({ lat: item.lat, lng: item.lng }, item.estabelecimento, null, `
+          <div>
+            <p>
+              ${item.logradouro} - ${item.bairro}
+              <br>
+              ${item.cidade}
+            </p>
+          </div>
+        `)
       })
-
-      // depois da uintegração tratar só fazer route se for diferente de my locatio
-      this.getRoute()
     },
     
     getSiteIcon(status) {
@@ -191,11 +249,11 @@ export default {
     },
 
     toggleInfoWindow(marker, idx) {
-      console.log(marker)
       this.infoWindowPos = marker.position;
       this.infoContent = {
-        title:marker.title,
-        urlMaps: `https://www.google.com/maps/?q=${marker.position.lat},${marker.position.lng}`
+        title: marker.title,
+        urlMaps: `https://www.google.com/maps/?q=${marker.position.lat},${marker.position.lng}`,
+        address: marker.address
       };
 
       if (this.currentMidx == idx) {
@@ -246,6 +304,9 @@ export default {
       border: 0;
       text-align: center;
       line-height: 60px;
+      &:disabled {
+        background-color: #b3b3b3;
+      }
     }
   }
 
@@ -256,15 +317,26 @@ export default {
   .gm-style-iw-t{
     color: #0d0e0f;
     h3 {
-      font-size: 18px;
+      font-size: 16px;
       text-transform: uppercase;
     }
     
     p{
       color: #0d0e0f;
+      font-size:12px;
+      margin: 0;
+      text-transform: capitalize;
+
+      &.title {
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size:12px;
+        line-height: 12px;
+        margin-bottom: 5px;
+      }
 
       a {
-       font-size: 16px;
+       font-size: 12px;
        color:#ea9b1c;
       }
     }  
