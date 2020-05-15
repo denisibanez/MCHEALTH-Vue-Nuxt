@@ -14,14 +14,6 @@ export default {
     Carousel,
     Footer,
   },
-  head () {
-    return {
-      title: "Estadão - Saúde&Ciência",
-      meta: [
-        { hid: 'description', name: 'description', content: 'Um novo olhar da informação' }
-      ]
-    }
-  },
   data: function() {
     return {
       slideData: [
@@ -53,6 +45,11 @@ export default {
           link: "",
         },
       ]
+    }
+  },
+  head () {
+    return {
+      title: process.env.headTitleSlog,
     }
   },
   transition: {

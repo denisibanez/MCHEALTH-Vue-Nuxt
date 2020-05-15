@@ -65,26 +65,22 @@
       <div id="game-overlay-end" class="w-100 h-100 text-left" ref="refOverlayEnd">
         <div class="row no-gutters w-100 h-100 align-items-center justify-content-center">
           <section class="col-9" v-if="score.imune >= 95">
-            <h2 class="lay-color-orange mb-2">
-              <span>Parabéns, a doênça foi erradicada!</span>
-            </h2>
+            <h5 class="lay-color-orange mb-2 h2 font-weight-bold">
+              {{ content.win.title }}
+            </h5>
             <p class="mb-3">Você imunizou <strong class="lay-color-orange">{{score.imune}}%</strong> da população.</p>
-            <div class="p-3 lay-bg-darker rounded mb-3">
-              <p class="lay-color-light-gray m-0">
-                Para uma doênça ser considerada <strong class="lay-color-orange">erradicada</strong>, pelo menos <strong class="lay-color-orange">95%</strong> da população precisa estar <strong class="lay-color-orange">imunizada</strong> à ela.
-              </p>
-            </div>
+            <p class="mb-3" v-html="content.win.description"></p>
             <p class="lay-color-light-gray">
               Compartilhe
             </p>
-            <social-sharing url="https://vuejs.org/"
-              title="The Progressive JavaScript Framework"
-              description="Intuitive, Fast and Composable MVVM for building interactive interfaces."
-              quote="Vue is a progressive framework for building user interfaces."
-              hashtags="vuejs,javascript,framework"
-              twitter-user="vuejs"
-              inline-template
-              class="mb-3">
+            <social-sharing 
+              :url="content.win.share.url"
+              :title="content.win.share.title"
+              :description="content.win.share.description"
+              :quote="content.win.share.quote"
+              :hashtags="content.win.share.hashtags"
+              :twitter-user="content.win.share.twitterUser"
+              inline-template class="mb-3">
               <div>
                 <network network="facebook">
                   <span class="icomoon-facebook lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
@@ -98,9 +94,6 @@
                 <network network="twitter">
                   <span class="icomoon-twitter lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
                 </network>
-                <network network="email">
-                  <span class="icomoon-letter lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
-                </network>
               </div>
             </social-sharing>
             <a v-on:click.prevent.stop="restartGame()" class="lay-color-light-gray text-decoration-none">
@@ -108,15 +101,34 @@
             </a>
           </section>
           <section class="col-9" v-else>
-            <h2 class="game-color-orange mb-2 d-flex align-items-center">
-              <span>Não foi desta vez, que tal tentar de novo...</span>
-            </h2>
-            <p class="mb-3">A doênca não foi erradicada. Você imunizou somente <strong class="lay-color-orange">{{score.imune}}%</strong> da população.</p>
-            <div class="p-3 lay-bg-darker rounded mb-3">
-              <p class="lay-color-light-gray m-0">
-                Para uma doênça ser considerada <strong class="lay-color-orange">erradicada</strong>, pelo menos <strong class="lay-color-orange">95%</strong> da população precisa estar <strong class="lay-color-orange">imunizada</strong> à ela.
-              </p>
-            </div>
+            <h5 class="lay-color-orange mb-2 d-flex align-items-center h2 font-weight-bold">
+              {{ content.lose.title }}
+            </h5>
+            <p class="mb-3">A doênca não foi eliminada. Você imunizou somente <strong class="lay-color-orange">{{score.imune}}%</strong> da população.</p>
+            <p class="mb-3" v-html="content.lose.description"></p>
+            <social-sharing 
+              :url="content.lose.share.url"
+              :title="content.lose.share.title"
+              :description="content.lose.share.description"
+              :quote="content.lose.share.quote"
+              :hashtags="content.lose.share.hashtags"
+              :twitter-user="content.lose.share.twitterUser"
+              inline-template class="mb-3">
+              <div>
+                <network network="facebook">
+                  <span class="icomoon-facebook lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
+                </network>
+                <network network="linkedin">
+                  <span class="icomoon-linkedin lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
+                </network>
+                <network network="whatsapp">
+                  <span class="icomoon-whatsapp lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
+                </network>
+                <network network="twitter">
+                  <span class="icomoon-twitter lay-color-light-gray h4 mr-2 is-cursor-hover"></span>
+                </network>
+              </div>
+            </social-sharing>
             <a v-on:click.prevent.stop="restartGame()" class="lay-color-light-gray text-decoration-none">
               <span class="icomoon-reload"></span> Tentar novamente
             </a>
@@ -197,7 +209,8 @@
         status: 'not-started',  // Game status: 'not-started', 'paused', 'playing' or 'ended'
         soundStatus: 'on',     // Sound status: 'on' or 'off'
         sounds: {               // Vars needed for sounds effects
-          tap: null,
+          tapCorrect: null,
+          tapWrong: null,
           win: null,
           lose: null,
           bg: null,
@@ -210,6 +223,32 @@
         yDistance: 0,           // Y distange between people on population
         width: null,            // Canvas width (get from parent)
         height: 570,            // Canvas height
+        content: {
+          win: {
+            title: 'Parabéns, doença eliminada com sucesso!',
+            description: 'Você sabia que para <strong class="lay-color-orange">eliminar</strong> uma doença <strong class="lay-color-orange">95%</strong> da população precisa estar imunizada? Esse é mais um dos motivos que torna a vacinação tão importante.',
+            share: {
+              url: 'https://youtube.com/',
+              title: "",
+              description: "XXXXXXXX",
+              quote: "Facebook text on share",
+              hashtags: "hashtags1, hashtags2, hashtags3",
+              twitterUser: "vuejs",
+            },
+          },
+          lose: {
+            url: 'https://youtube.com/',
+            title: 'Não foi desta vez, que tal tentar de novo?',
+            description: 'Você sabia que para <strong class="lay-color-orange">eliminar</strong> uma doença <strong class="lay-color-orange">95%</strong> da população precisa estar imunizada? Esse é mais um dos motivos que torna a vacinação tão importante.',
+            share: {
+              title: "Estadão Saúde&Ciência",
+              description: "XXXXXXXX",
+              quote: "Facebook text on share",
+              hashtags: "hashtags1, hashtags2, hashtags3",
+              twitterUser: "vuejs",
+            },
+          }
+        }
       }
     },
     methods: {
@@ -237,10 +276,11 @@
         this.yDistance = Math.trunc(this.height / (this.config.field.y + 1));
 
         // Instanciate sounds effects
-        this.sounds.tap = new Howl({ src: ['/sounds/vacinas/game-tap.mp3'] });
+        this.sounds.tapCorrect = new Howl({ src: ['/sounds/vacinas/game-tap.mp3'], volume: 0.5 });
+        this.sounds.tapWrong = new Howl({ src: ['/sounds/vacinas/game-wrong-tap.mp3'] });
         this.sounds.win = new Howl({ src: ['/sounds/vacinas/game-win.mp3'] });
         this.sounds.lose = new Howl({ src: ['/sounds/vacinas/game-lose.mp3'] });
-        this.sounds.bg = new Howl({ src: ['/sounds/vacinas/game-background.mp3'],loop: true, volume: 0.3 });
+        this.sounds.bg = new Howl({ src: ['/sounds/vacinas/game-background.mp3'], loop: true, volume: 0.2 });
 
         // Intanciate population
         this.initGame();
@@ -455,9 +495,13 @@
         let y = event.clientY - rect.top;  // y position within the element.
         this.population.forEach(person => {
           if (this.getDistance(x, y, person.center.x, person.center.y) < (this.config.clickRadius * 2)) {
-            person.applyVaccine();
+            var click = person.applyVaccine();
             if (this.soundStatus === 'on') {
-              this.sounds.tap.play();
+              if (click) {
+                this.sounds.tapCorrect.play();
+              } else {
+                this.sounds.tapWrong.play();
+              }
             }
           }
         });
@@ -651,7 +695,7 @@
 
       function onResize() {
         this.init();
-        this.status = 'no-started';
+        this.status = 'not-started';
 
         this.initGame();
       }
@@ -680,6 +724,8 @@
             this.sounds.bg.play();
           }
         } else if (val === 'ended') {
+          this.pauseTimer();
+
           TweenLite.to(refOverlayEnd, .5, { opacity: 1, display: 'block'});
           TweenLite.to(refCanvas, .5, { opacity: 0, display: 'none'});
           if (this.soundStatus === 'on') {
@@ -697,7 +743,7 @@
         if (val === 0) {
           setTimeout(() => {
             this.status = 'ended';
-          }, 1000);
+          }, 200);
         }
       },
       soundStatus: function (val) {

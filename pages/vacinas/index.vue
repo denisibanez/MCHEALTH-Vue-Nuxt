@@ -57,7 +57,7 @@
     },
     head () {
       return {
-        title: "Estadão - Saúde&Ciência | Vacinas"
+        title: "Vacinas",
       }
     },
     methods: {

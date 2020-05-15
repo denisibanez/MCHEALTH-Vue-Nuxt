@@ -6,10 +6,20 @@ export default {
   },
   mode: 'universal',
   /*
+  ** Global Variables
+  */
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+    headTitleBase: 'Estadão Saúde&Ciência',
+    headTitleDivi: ' | ',
+    headTitleSlog: 'Um novo olhar da informação',
+    headDescr: 'Por que ainda existem pessoas que são contra as vacinas?',
+  },
+  /*
   ** Headers of the page
   */
   head: {
-    title: process.env.npm_package_name || '',
+    titleTemplate: 'Estadão Saúde&Ciência | %s',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -37,7 +47,7 @@ export default {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#ea9b1c' },
   /*
   ** Global CSS
   */
@@ -48,6 +58,7 @@ export default {
   */
   plugins: [
     // { src: `~plugins/vimeo-player`, ssr: false }
+    { src: `~plugins/youtube.js`, ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules

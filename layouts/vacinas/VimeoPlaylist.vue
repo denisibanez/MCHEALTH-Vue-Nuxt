@@ -6,7 +6,10 @@
         <div class="row no-gutters">
           <div class="col-md-7 col-lg-8">
             <div class="w-100 h-100 d-flex align-items-center justify-content-center box-video">
-              <VimeoPlayer :url="getCurrentVideoID()" />
+              <!-- <VimeoPlayer :url="getCurrentVideoID()" /> -->
+              <no-ssr placeholder="Carregando...">
+                <youtube :video-id="getCurrentVideoID()" :player-vars="playerVars"></youtube>
+              </no-ssr>
             </div>
           </div>
           <div class="col-md-5 col-lg-4 p-4">
@@ -18,7 +21,7 @@
               </div>
               <div class="tv-sidebar-video my-1 my-md-2 tv-sidebar-item d-flex" v-for="(item, index) in playlistData" :key="index" :class="index === currentVideo ? 'active' : ''" @click="selectVideo(index)">
                 <div class="tv-sidebar-thumb overflow-hidden rounded">
-                  <img :src="require(`@/assets/images/${item.thumb}`)" :alt="item.title">
+                  <img :src="`https://img.youtube.com/vi/${item.ytID}/mqdefault.jpg`" :alt="item.title">
                 </div>
                 <div class="tv-sidebar-video-title mx-2 mx-md-3 py-1 d-flex align-items-center">
                   <h6 class="font-weight-normal mb-1" v-html="item.title"></h6>
@@ -33,25 +36,30 @@
 </template>
 
 <script>
-  import VimeoPlayer from "./VimeoPlayer";
-
   export default {
     name: 'VimeoPlaylist',
-    components: { 
-      VimeoPlayer
-    },
     props: {
       playlistData: Array
     },
     data: function() {
       return {
-        currentVideo: 0
+        currentVideo: 0,
+        playerVars: {
+          enablejsapi: 1, // Control via javascript
+          color: 'white', // Timeline color 
+          fs: 0,  // FullScreen mode
+          iv_load_policy: 0,  // Video annotations
+          modestbranding: 0, // Remove Youtube logo
+          origin: '', // Domani here
+          rel: 0, // Disable random related videos - Now, only show videos from same channel
+          widget_referrer: '', // Complete current URL for Youtube analitics
+        }
       }
     },
     methods: {
       getCurrentVideoID: function () {
         if (this.playlistData[this.currentVideo] !== null) {
-          return this.playlistData[this.currentVideo].vimeoID;
+          return this.playlistData[this.currentVideo].ytID;
         }
       },
       selectVideo: function(newVideo) {
@@ -76,6 +84,16 @@
     z-index: 5
     .box-video
       background-color: #000
+      /deep/ > div
+        width: 100%
+        min-height: 486px
+        position: relative
+        iframe
+          position: absolute
+          width: 100%
+          height: 100% 
+          top: 0
+          left: 0
     .tv-sidebar
       display: -ms-flexbox
       display: -webkit-flex
@@ -179,11 +197,24 @@
           z-index: 3  
 
   @include media-breakpoint-down(lg)
+    .c-vimeo-playlist
+      .box-video
+        /deep/ > div
+          min-height: 420px
 
   @include media-breakpoint-down(md)
+    .c-vimeo-playlist
+      .box-video
+        /deep/ > div
+          min-height: 380px
 
   @include media-breakpoint-down(sm)
-    
+    .c-vimeo-playlist
+      .box-video
+        /deep/ > div
+          min-height: auto
+          padding-bottom: 56.3%
+
   @include media-breakpoint-down(xs)
     .c-vimeo-playlist
       .tv-sidebar

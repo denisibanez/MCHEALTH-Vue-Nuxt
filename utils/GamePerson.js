@@ -50,8 +50,6 @@ export default class Person {
       bg:           "#2e3337",
       diseaseArms:  "#de3533"
     }
-
-    this.soundInfected =  new Howl({ src: ['/sounds/vacinas/game-infected2.mp3'] });
   }
 
   calcDiagonalWaypoints() {
@@ -583,8 +581,13 @@ export default class Person {
   }
 
   applyVaccine() {
+    console.log('applyVaccine');
+
     if (this.status === 1) {
       this.status = 2;
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -603,7 +606,6 @@ export default class Person {
     if (this.status === 1) {
       this.status = 3;
       this.calcDiagonalWaypoints();
-      this.soundInfected.play();
     }
   }
 }

@@ -68,18 +68,15 @@
         playlistData: [ 
           {
             title: "<b class='lay-color-orange'>JUAREZ CUNHA</b><br><small>Médico Pediatra e Presidente da Sociedade Brasileira de Imunização</small>",
-            vimeoID: "190613094",
-            thumb: "vacinas/video-thumbs/thumb-01.png",
+            ytID: "SLD9xzJ4oeU",
           },
           {
-           title: "<b class='lay-color-orange'>HELDER KAKAUA</b><br><small>Prof. PHD e Pesquisador Biologia Molecular USP</small>",
-            vimeoID: "188284379",
-            thumb: "vacinas/video-thumbs/thumb-02.png",
+            title: "<b class='lay-color-orange'>HELDER KAKAUA</b><br><small>Prof. PHD e Pesquisador Biologia Molecular USP</small>",
+            ytID: "BSG5iHK9Scw",
           },
           {
             title: "<b class='lay-color-orange'>LEONARDO HILÁRIO</b><br><small>Engenheiro de Computação</small>",
-            vimeoID: "184694770",
-            thumb: "vacinas/video-thumbs/thumb-03.png",
+            ytID: "NsRLOV4pHyk",
           },
         ],
       }
