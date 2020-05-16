@@ -1,4 +1,4 @@
-     <template>
+<template>
   <div class="container-fluid maps-wrapper">
     <div class="row">
       <div class="col-md-12">
@@ -27,7 +27,6 @@
           class="no-padding"
           :options="getOptions"
         >
-          <google-map-cluster>
             <gmap-info-window
               :options="infoOptions"
               :position="infoWindowPos"
@@ -59,7 +58,6 @@
               :icon="m.icon"
               @click="toggleInfoWindow(m, index)"
             />
-          </google-map-cluster>  
         </google-map>
       </div>
     </div>
@@ -144,15 +142,6 @@ export default {
         icon: icon,
         address: address
       })
-      
-      if(this.places.length >= 2) {
-        this.getRoute()
-      } else {
-        this.center = {
-          lat: this.currentPlace.coords.lat,
-          lng: this.currentPlace.coords.lng
-        }
-      }
     },
   
     setPlace(place) {
@@ -191,6 +180,14 @@ export default {
         }).finally(() => {
           this.getMarkers()
           this.compareItem.position.lat = this.places[0].position.lat
+          if(this.places.length == 1) {
+            this.center = {
+              lat: this.currentPlace.coords.lat,
+              lng: this.currentPlace.coords.lng
+            }
+          } else {
+            this.getRoute()
+          }
         })
       }
     },
@@ -227,6 +224,10 @@ export default {
     },
 
     getRoute() {
+      if (this.directionsDisplay != null) {
+          this.directionsDisplay.setMap(null);
+          this.directionsDisplay = null;
+      }
       const origin =  { lat: this.places[0].position.lat, lng: this.places[0].position.lng }
       const destiny =  { lat: this.places[1].position.lat, lng: this.places[1].position.lng }
       const _self = this
