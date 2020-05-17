@@ -1,8 +1,8 @@
 {
   "name": "estadao",
   "version": "1.0.0",
-  "description": "My fantabulous Nuxt.js project",
-  "author": "Claudio Bonfati",
+  "description": "Nuxt.js project for portal 'Estadão Saúde&Ciência'",
+  "author": "McCann Health Brazil",
   "private": true,
   "scripts": {
     "dev": "nuxt",

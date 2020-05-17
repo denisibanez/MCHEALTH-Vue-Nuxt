@@ -49,7 +49,7 @@
     <div class="w-100">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3">
         <div class="col mb-3 mb-md-4" v-for="(item, index) in cardsModalData" :key="index">
-          <div class="card h-100 rounded shadow p-3 lay-bg-darker overflow-hidden is-cursor-hover" @click="openModal(index + 1)">
+          <div class="card h-100 rounded shadow p-3 lay-bg-darker overflow-hidden is-cursor-hover" @click="openModal(index)">
             <div class="card-number lay-bg-orange text-white small is-cursor-hover">
               {{ index + 1 }}
             </div>
