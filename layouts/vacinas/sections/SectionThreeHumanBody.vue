@@ -41,7 +41,7 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-11">
-            <VimeoPlaylist :playlistData="playlistData" />
+            <VideoPlaylist :playlistData="playlistData" />
           </div>
         </div>
       </div>
@@ -51,13 +51,13 @@
 
 <script>
   import ThreeHumanBody from "./../ThreeHumanBody";
-  import VimeoPlaylist from "./../VimeoPlaylist";
+  import VideoPlaylist from "./../VideoPlaylist";
 
   export default {
     name: 'SectionThreeHumanBody',
     components: {
       ThreeHumanBody,
-      VimeoPlaylist,
+      VideoPlaylist,
     },
     data: function() {
       return {

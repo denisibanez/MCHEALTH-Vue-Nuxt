@@ -1,12 +1,11 @@
 <template>
-  <div class="c-vimeo-playlist">
+  <div class="c-video-playlist">
     <div class="w-100 box-detailed-right-top">
       <span class="detail"></span>
       <div class="content overflow-hidden rounded">
         <div class="row no-gutters">
           <div class="col-md-7 col-lg-8">
             <div class="w-100 h-100 d-flex align-items-center justify-content-center box-video">
-              <!-- <VimeoPlayer :url="getCurrentVideoID()" /> -->
               <no-ssr placeholder="Carregando...">
                 <youtube :video-id="getCurrentVideoID()" :player-vars="playerVars"></youtube>
               </no-ssr>
@@ -37,7 +36,7 @@
 
 <script>
   export default {
-    name: 'VimeoPlaylist',
+    name: 'VideoPlaylist',
     props: {
       playlistData: Array
     },
@@ -79,14 +78,14 @@
   @import '~bootstrap/scss/mixins'
   @import '~assets/sass/variables'
 
-  .c-vimeo-playlist
+  .c-video-playlist
     position: relative
     z-index: 5
     .box-video
       background-color: #000
       /deep/ > div
         width: 100%
-        min-height: 486px
+        padding-bottom: 56.3%
         position: relative
         iframe
           position: absolute
@@ -197,26 +196,26 @@
           z-index: 3  
 
   @include media-breakpoint-down(lg)
-    .c-vimeo-playlist
+    .c-video-playlist
       .box-video
         /deep/ > div
-          min-height: 420px
+          // min-height: 420px
 
   @include media-breakpoint-down(md)
-    .c-vimeo-playlist
+    .c-video-playlist
       .box-video
         /deep/ > div
-          min-height: 380px
+          // min-height: 380px
 
   @include media-breakpoint-down(sm)
-    .c-vimeo-playlist
+    .c-video-playlist
       .box-video
         /deep/ > div
-          min-height: auto
-          padding-bottom: 56.3%
+          // min-height: auto
+          // padding-bottom: 56.3%
 
   @include media-breakpoint-down(xs)
-    .c-vimeo-playlist
+    .c-video-playlist
       .tv-sidebar
         .tv-sidebar-item
           .tv-sidebar-thumb
