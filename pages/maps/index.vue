@@ -27,6 +27,7 @@
           class="no-padding"
           :options="getOptions"
         >
+          <google-map-cluster>
             <gmap-info-window
               :options="infoOptions"
               :position="infoWindowPos"
@@ -58,6 +59,7 @@
               :icon="m.icon"
               @click="toggleInfoWindow(m, index)"
             />
+          </google-map-cluster>
         </google-map>
       </div>
     </div>
@@ -234,6 +236,7 @@ export default {
     
       this.directionsService = new google.maps.DirectionsService()
       this.directionsDisplay = new google.maps.DirectionsRenderer()
+      
       this.directionsDisplay.setMap(this.$refs.gmap.$mapObject)
       _self.directionsService.route({
         origin:  new google.maps.LatLng(origin.lat, origin.lng),
