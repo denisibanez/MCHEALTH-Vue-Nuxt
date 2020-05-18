@@ -50,10 +50,7 @@
 
     },
     mounted: function() {
-    },
-    transition: {
-      name: 'transition',
-      mode: 'out-in'
+    
     }
   }
 </script>
@@ -64,14 +61,6 @@
   @import '~assets/sass/basics/bootstrap-override'
   @import '~bootstrap/scss/mixins'
   @import '~assets/sass/variables'
-
-  .transition-enter-active, 
-  .transition-leave-active
-    transition: opacity .4s ease-out 
-
-  .transition-enter, 
-  .transition-leave-active
-    opacity: 0
 
   @include media-breakpoint-down(lg)
 
