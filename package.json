@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@vimeo/player": "^2.11.0",
+    "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "dotenv": "^8.2.0",
     "gsap": "^3.2.6",
@@ -30,7 +31,9 @@
     "responsive-loader": "^1.2.0",
     "sharp": "^0.25.2",
     "sqip-loader": "^1.0.0",
+    "swiper": "^5.4.0",
     "three": "^0.115.0",
+    "vue-awesome-swiper": "^4.1.1",
     "vue-google-autocomplete": "^1.1.0",
     "vue-social-sharing": "^2.4.7",
     "vue2-google-maps": "^0.10.7",
