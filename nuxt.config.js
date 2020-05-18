@@ -1,25 +1,14 @@
+const env = require('dotenv').config()
 
 export default {
-  server: {
-    // port: 8000, // default: 3000
-    host: '192.168.15.25' // default: localhost
-  },
   mode: 'universal',
-  /*
-  ** Global Variables
-  */
-  env: {
-    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
-    headTitleBase: 'Estadão Saúde&Ciência',
-    headTitleDivi: ' | ',
-    headTitleSlog: 'Um novo olhar da informação',
-    headDescr: 'Por que ainda existem pessoas que são contra as vacinas?',
-  },
+  env: env.parsed,
   /*
   ** Headers of the page
+  
   */
   head: {
-    titleTemplate: 'Estadão Saúde&Ciência | %s',
+    title: process.env.npm_package_name || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -42,15 +31,12 @@ export default {
       { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon/favicon-32x32.png' },
       { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon/favicon-96x96.png' },
       { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon/favicon-16x16.png' },
-    ]
+    ],
   },
   /*
   ** Customize the progress-bar color
   */
-  loading: { 
-    color: '#ea9b1c', 
-    throttle: 0,
-  },
+  loading: { color: '#fff' },
   /*
   ** Global CSS
   */
@@ -60,24 +46,65 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    // { src: `~plugins/vimeo-player`, ssr: false }
-    { src: `~plugins/youtube.js`, ssr: false }
+    '@plugins/vue-maps.js',
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    '@aceforth/nuxt-optimized-images',
   ],
+  optimizedImages: {
+    optimizeImages: true
+  },
   /*
   ** Nuxt.js modules
   */
   modules: [
+    'nuxt-lazy-load',
+    [
+      "nuxt-compress",
+      {
+        gzip: {
+          cache: true
+        },
+        brotli: {
+          threshold: 10240
+        }
+      }
+    ]
   ],
   /*
   ** Build configuration
   */
   build: {
+    extractCSS: true,
+    sourceMap: false,
+    layouts: false,
+    pages: true,
+    commons: true,
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        automaticNameDelimiter: '.',
+        name: undefined,
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.(css|vue)$/,
+            chunks: 'all',
+            enforce: true
+          }
+        },
+        minSize: 51200,
+        maxSize: 51200,
+      }
+    },
     vendor: [
+      'three',
+      'bootstrap',
+      'gsap',
+      'jquery'
     ],
     postcss: {
       preset: {
@@ -88,12 +115,37 @@ export default {
     },
     transpile: [
       "gsap",
-      "three"
+      "three",
+      "vue2-google-maps",
     ],
+    filenames:{
+      app: ({ isDev }) => isDev ? '[name].js' : '[contenthash].js',
+      chunk: ({ isDev }) => isDev ? '[name].js' : '[contenthash].js',
+      css: ({ isDev }) => isDev ? '[name].css' : '[contenthash].css',
+      img: ({ isDev }) => isDev ? '[path][name].[ext]' : 'img/[contenthash:7].[ext]',
+      font: ({ isDev }) => isDev ? '[path][name].[ext]' : 'fonts/[contenthash:7].[ext]',
+      video: ({ isDev }) => isDev ? '[path][name].[ext]' : 'videos/[contenthash:7].[ext]'
+    },
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend (config, { isClient }) {
+      if (isClient) {
+        config.optimization.splitChunks.maxSize = 51200;
+      }
+
+      const imagemin = require('imagemin');
+      const imageminPngquant = require('imagemin-pngquant');
+      
+      (async () => {
+          await imagemin(['images/*.png'], 'build/images', {
+              plugins: [
+                  imageminPngquant()
+              ]
+          });
+      
+          console.log('Images optimized');
+      })();
     }
   }
 }
