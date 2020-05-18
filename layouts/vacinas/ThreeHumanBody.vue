@@ -117,6 +117,7 @@
       },
       animate: function() {
         requestAnimationFrame(this.animate);
+
         if (this.obj) {
           this.updateObjRotation();
           this.renderer.render(this.scene, this.camera);
@@ -143,6 +144,7 @@
   @include media-breakpoint-down(sm)
     #canvas
       margin-left: -200px
+
   @include media-breakpoint-down(xs)
 
 </style>

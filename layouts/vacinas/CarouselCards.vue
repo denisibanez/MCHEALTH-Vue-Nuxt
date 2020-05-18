@@ -58,7 +58,7 @@
       
     },
     mounted () {
-      // var mySwiper = new Swiper ('.swiper-container')
+      
     }
   }
 </script>

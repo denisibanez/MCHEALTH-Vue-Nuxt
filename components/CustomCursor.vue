@@ -55,8 +55,6 @@
 
         TweenLite.to(this.helpers.cursor, 0.3, { x: this.helpers.mousePosX, y: this.helpers.mousePosY });
         TweenLite.to(this.helpers.cursor_dot, 0, { x: this.helpers.mousePosX, y: this.helpers.mousePosY });
-
-        document.querySelector('html').classList.remove('hide-cursor');
       },
       mouseCursorEnter: function () {
         TweenLite.to([this.helpers.cursor, this.helpers.cursor_dot], { autoAlpha: 1 });
@@ -76,6 +74,12 @@
           document.querySelector('html').classList.add('is-hover');
         } else {
           document.querySelector('html').classList.remove('is-hover')
+        }
+
+        if (tagName === 'IFRAME' || classList.contains('is-none-hover')) {
+          document.querySelector('html').classList.add('hide-cursor');
+        } else {
+          document.querySelector('html').classList.remove('hide-cursor');
         }
       },
       mouseCursorUpdateOnOut: function (event) {
