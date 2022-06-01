@@ -27,7 +27,7 @@
     "popper": "^1.0.1",
     "popper.js": "^1.16.1",
     "responsive-loader": "^1.2.0",
-    "sharp": "^0.25.2",
+    "sharp": "^0.30.5",
     "sqip-loader": "^1.0.0",
     "three": "^0.115.0",
     "vue-google-autocomplete": "^1.1.0",
