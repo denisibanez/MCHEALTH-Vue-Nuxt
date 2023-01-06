@@ -21,7 +21,7 @@
     "imagemin-svgo": "^7.1.0",
     "jquery": "^3.4.1",
     "lqip-loader": "^2.2.0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.15.8",
     "nuxt-compress": "^1.1.0",
     "nuxt-lazy-load": "^1.2.2",
     "popper": "^1.0.1",
